@@ -13,7 +13,12 @@
 %union {
     int intVal;    
     char charVal;               
-	float floatVal;                            
+	float floatVal; 
+
+    struct info{
+    int typeId; //0-int, 1-float, 2-char
+    int ival;
+  }info;                           
 };
 
 
@@ -24,6 +29,9 @@
 %token <intVal> INT_VALUE
 %token <floatVal> DECIMAL_VALUE              
 %token <charVal> CHAR_VALUE
+
+%type <info> factor
+
 %nonassoc OR 
 %nonassoc AND
 %nonassoc NOT 
@@ -94,11 +102,19 @@ math_expr: math_expr PLUS term {printf("math_expr: PLUS term() = %d\n",tokensVal
 
 term: term MULTIPLY factor {printf("term: * factor()\n");} 
     | term DIVISIDE factor {printf("term: / factor()\n");} 
-    | factor {printf("factor() = %d \n" , tokensVal[tokenValId - 1]);}
+    | factor {printf("factor = %d and typeId:%d \n" , tokensVal[tokenValId - 1] , $1.typeId );}
     ;
 factor: VAR {printf("factor: VARs\n");} 
-      | INT_VALUE { tokensVal[tokenValId++] = $1; printf("factor: INT_VALUE = %d\n",$1);} 
-      | DECIMAL_VALUE { printf("factor: DECIMAL_VALUE = %d\n",$1);} 
+      | INT_VALUE                   { 
+                                        $$.typeId = 0; // int type
+                                        tokensVal[tokenValId++] = $1;
+                                        $$.ival = $1;
+                                        printf("factor: INT_VALUE = %d\n",$1);
+                                    } 
+      | DECIMAL_VALUE               { 
+                                        $$.typeId = 1; // float type
+                                        printf("factor: DECIMAL_VALUE = %d\n",$1);
+                                    } 
       | '(' math_expr ')' {printf("factor: (math_expr))\n");}
       ;
 
