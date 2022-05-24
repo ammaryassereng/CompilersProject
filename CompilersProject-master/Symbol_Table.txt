@@ -1,0 +1,6 @@
+Name          Const       Datatype          Value    Initialized           Used          Line
+a              0        Integer             -4              1              0              1
+a              0        Integer             -4              1              1              2
+a              0        Integer             -4              1              1              2
+e              0        Integer            -10              1              0              2
+e              0        Integer            -10              1              1              3
