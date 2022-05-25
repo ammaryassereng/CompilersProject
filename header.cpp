@@ -11,7 +11,7 @@ struct element
 {
     int type;
     int isConstant;
-    char* VarName;
+    string VarName;
     int leval;
     int intval;
     char charval;
@@ -38,7 +38,7 @@ int insertElement(int type, int isConstant, char* VarName, int intval)
     return 1;
 }*/
 
-vector<unordered_map<char*,element>> scopes;   // will represent the symbol table in an entire scope
+vector<unordered_map<string,element>> scopes;   // will represent the symbol table in an entire scope
 
 /*bool ExistingVar(char* VarName,int level)
 {
@@ -59,7 +59,7 @@ vector<unordered_map<char*,element>> scopes;   // will represent the symbol tabl
     }
 }*/
 
-int GetExistingVarLevel(char* VarName,int level)
+int GetExistingVarLevel(string VarName,int level)
 {
     if(level < (int) scopes.size())
     {
@@ -80,7 +80,7 @@ int GetExistingVarLevel(char* VarName,int level)
 
 void NewLevel()
 {
-    unordered_map<char*,element> val;
+    unordered_map<string,element> val;
     scopes.push_back(val);
 }
 
@@ -91,17 +91,18 @@ void removeLevel()
 
 int InsertNewIntElement(int type, int isconstant, char* name, int level, int intVal)
 {
-    int Exist = GetExistingVarLevel(name, level);
+    string str = name;
+    int Exist = GetExistingVarLevel(str, level);
     //cout<<endl<<level<<endl<<endl;
     if (Exist == -1 || Exist != level)
     {
         struct element Nele;
         Nele.type = type;
         Nele.isConstant = isconstant;
-        Nele.VarName = name;
+        Nele.VarName = str;
         Nele.intval = intVal;
     
-        scopes[level][name] = Nele;
+        scopes[level][str] = Nele;
         return 1;        
     }
 
@@ -111,9 +112,12 @@ int InsertNewIntElement(int type, int isconstant, char* name, int level, int int
 
 int UpdateIntVal(int type, int isconstant, char* name, int level, int intVal)
 {
-    int Exist = GetExistingVarLevel(name, level);
 
-    if(Exist == -1 || scopes[Exist][name].type != type || type != 0 )
+    string str = name;
+
+    int Exist = GetExistingVarLevel(str, level);
+
+    if(Exist == -1 || scopes[Exist][str].type != type || type != 0 )
     {
         return -1;
     }
@@ -121,10 +125,10 @@ int UpdateIntVal(int type, int isconstant, char* name, int level, int intVal)
     struct element Nele;
     Nele.type = type;
     Nele.isConstant = isconstant;
-    Nele.VarName = name;
+    Nele.VarName = str;
     Nele.intval = intVal;
     
-    scopes[Exist][name] = Nele;
+    scopes[Exist][str] = Nele;
     return 1;
 }
 

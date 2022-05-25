@@ -17,6 +17,7 @@
     int intVal;    
     char charVal;               
 	float floatVal; 
+	char* varName; 
 
     struct mathinfo{
     int typeId; //0-int, 1-float, 2-char
@@ -33,7 +34,7 @@
     float fval;
     int bval; //0-false, 1-true
     char cval;
-    char lexeme[];
+    char* lexeme;
   }varinfo;                           
 };
 
@@ -89,7 +90,10 @@ statement : var_declaration END_EXPR
         ;
 
 
-var_declaration : INT VAR 
+var_declaration : INT VAR                           {
+                                                        printf("var name: %s\n" ,$2.lexeme);
+                                                        printf("declared new varable %d\n",InsertNewIntElement(0,0,$2.lexeme,0,0));
+                                                    }
                 | FLOAT VAR 
                 | BOOL VAR 
                 | CHAR VAR 
@@ -426,7 +430,15 @@ int main (void) {
     PrintFunc(1000);
 
     NewLevel();
-    printf("%d\n",InsertNewIntElement(0,0,"x",0,5));
+
+    /*printf("declared new varable %d\n",InsertNewIntElement(0,0,"y",0,0));
+    printf("declared new varable %d\n",InsertNewIntElement(0,0,"y",0,0));
+    printf("declared new varable %d\n",InsertNewIntElement(0,0,"y",0,0));
+    printf("declared new varable %d\n",InsertNewIntElement(0,0,"y",0,0));
+    printf("declared new varable %d\n",InsertNewIntElement(0,0,"x",0,0));
+    printf("declared new varable %d\n",InsertNewIntElement(0,0,"x",0,0));*/
+
+    /*printf("%d\n",InsertNewIntElement(0,0,"x",0,5));
     printf("%d\n",InsertNewIntElement(0,0,"x",0,6));
     printf("%d\n",UpdateIntVal(0,0,"x",0,6));
     NewLevel();
@@ -434,7 +446,7 @@ int main (void) {
     printf("%d\n",InsertNewIntElement(0,0,"x",1,5));
     removeLevel();
     printf("%d\n",InsertNewIntElement(0,0,"x",0,5));
-    removeLevel();
+    removeLevel();*/
 
     /*yyin = fopen("testfile.txt","r+");
     if(yyin ==NULL){

@@ -905,7 +905,7 @@ YY_RULE_SETUP
 case 43:
 YY_RULE_SETUP
 #line 62 "lex.l"
-{return VAR;}
+{yylval.varinfo.lexeme = yytext; return VAR;}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP

@@ -59,7 +59,7 @@
 "return"                        {return RETURN;}
 ","                             {return COMMA;}
 
-[a-zA-Z_][a-zA-Z_0-9]*          {return VAR;}
+[a-zA-Z_][a-zA-Z_0-9]*          {yylval.varinfo.lexeme = yytext; return VAR;}
 0|[-]?[1-9][0-9]*               {yylval.intVal = atoi(yytext);  return INT_VALUE;}
 [-]?[0-9]+['.'][0-9]*           {yylval.floatVal = atof(yytext); return DECIMAL_VALUE;}
 \'.?\'                          {yylval.charVal = yytext[1]; return CHAR_VALUE;}
