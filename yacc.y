@@ -90,9 +90,21 @@ var_declaration : INT VAR
                 | FLOAT VAR 
                 | BOOL VAR 
                 | CHAR VAR 
-                | INT VAR EQUAL math_expr 
-                | FLOAT VAR EQUAL math_expr 
-                | BOOL VAR EQUAL logic_expr  
+                | INT VAR EQUAL math_expr           {
+                                                        //check math_expr type
+                                                        if($4.typeId != 0)
+                                                            yyerror("ERROR: Invalid variable assignment")
+                                                        //assign value($4.ival) to var
+                                                    } 
+                | FLOAT VAR EQUAL math_expr         {
+                                                        //check math_expr type
+                                                        if($4.typeId != 1)
+                                                            yyerror("ERROR: Invalid variable assignment")
+                                                        //assign value($4.fval) to var
+                                                    } 
+                | BOOL VAR EQUAL logic_expr         {
+                                                        //assign value($4.bval) to var
+                                                    }  
                 | CHAR VAR EQUAL CHAR_VALUE
                 | INT VAR EQUAL FUNCTION_CALL 
                 | FLOAT VAR EQUAL FUNCTION_CALL
