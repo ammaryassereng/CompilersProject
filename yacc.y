@@ -23,7 +23,15 @@
 
   struct logicinfo{
     int bval; //0-false, 1-true
-  }logicinfo;                           
+  }logicinfo;  
+  struct varinfo{
+    int typeId; //0-int, 1-float, 2-char, 3-bool
+    int ival;
+    float fval;
+    int bval; //0-false, 1-true
+    char cval;
+    char lexeme[];
+  }varinfo;                           
 };
 
 
@@ -37,6 +45,7 @@
 
 %type <mathinfo> factor term math_expr
 %type <logicinfo> logic_expr 
+%type <varinfo> VAR 
 
 %nonassoc OR 
 %nonassoc AND
@@ -214,7 +223,7 @@ term: term MULTIPLY factor          {
                                             $$.ival = $1.ival;
                                             printf("int => factor = %d and typeId:%d \n" , $1.ival , $1.typeId );
                                         }
-                                        else {
+                                        else if($1.typeId == 0) {
                                             $$.fval = $1.fval;
                                             printf("float => factor = %f and typeId:%d \n" , $1.fval , $1.typeId );
                                         }
@@ -227,7 +236,6 @@ factor: VAR                         {
                                     } 
       | INT_VALUE                   { 
                                         $$.typeId = 0; // int type
-                                        tokensVal[tokenValId++] = $1;
                                         $$.ival = $1;
                                         printf("factor: INT_VALUE = %d\n",$1);
                                     } 
