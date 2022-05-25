@@ -276,7 +276,10 @@ logic_expr:'(' logic_expr ')'                       {
                                                         $$.bval = !$2.bval;
                                                         printf("!logic_expr\n")
                                                     }
-          |math_expr GreaterThanOrEqual math_expr {printf("statement >= statement\n")}
+          |math_expr GreaterThanOrEqual math_expr   { 
+                                                        $$.bval = (($1.typeId == 0) ? $1.ival :$1.fval) >= (($3.typeId == 0) ? $3.ival :$3.fval);
+                                                        printf("statement >= statement\n")
+                                                    }
           |math_expr GreaterThan math_expr        {printf("statement > statement\n")}
           |math_expr EqualEqual math_expr         {printf("statement == statement\n")}
           |math_expr LessThanOrEqual math_expr    {printf("statement <= statement\n")}

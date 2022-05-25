@@ -109,12 +109,20 @@ typedef union YYSTYPE
 
   struct logicinfo{
     int bval; //0-false, 1-true
-  }logicinfo;                           
+  }logicinfo;  
+  struct varinfo{
+    int typeId; //0-int, 1-float, 2-char, 3-bool
+    int ival;
+    float fval;
+    int bval; //0-false, 1-true
+    char cval;
+    char lexeme[];
+  }varinfo;                           
 
 
 
 /* Line 1676 of yacc.c  */
-#line 118 "yacc.tab.h"
+#line 126 "yacc.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
