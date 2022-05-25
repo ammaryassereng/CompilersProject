@@ -104,7 +104,9 @@ term: term MULTIPLY factor {printf("term: * factor()\n");}
     | term DIVISIDE factor {printf("term: / factor()\n");} 
     | factor {printf("factor = %d and typeId:%d \n" , tokensVal[tokenValId - 1] , $1.typeId );}
     ;
-factor: VAR {printf("factor: VARs\n");} 
+factor: VAR                         {   
+                                        printf("factor: VARs\n");
+                                    } 
       | INT_VALUE                   { 
                                         $$.typeId = 0; // int type
                                         tokensVal[tokenValId++] = $1;
