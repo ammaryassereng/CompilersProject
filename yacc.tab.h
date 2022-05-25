@@ -101,16 +101,20 @@ typedef union YYSTYPE
     char charVal;               
 	float floatVal; 
 
-    struct info{
+    struct mathinfo{
     int typeId; //0-int, 1-float, 2-char
     int ival;
     float fval;
-  }info;                           
+  }mathinfo;    
+
+  struct logicinfo{
+    int bval; //0-false, 1-true
+  }logicinfo;                           
 
 
 
 /* Line 1676 of yacc.c  */
-#line 114 "yacc.tab.h"
+#line 118 "yacc.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

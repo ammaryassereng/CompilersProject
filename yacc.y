@@ -15,11 +15,15 @@
     char charVal;               
 	float floatVal; 
 
-    struct info{
+    struct mathinfo{
     int typeId; //0-int, 1-float, 2-char
     int ival;
     float fval;
-  }info;                           
+  }mathinfo;    
+
+  struct logicinfo{
+    int bval; //0-false, 1-true
+  }logicinfo;                           
 };
 
 
@@ -31,7 +35,8 @@
 %token <floatVal> DECIMAL_VALUE              
 %token <charVal> CHAR_VALUE
 
-%type <info> factor term math_expr
+%type <mathinfo> factor term math_expr
+%type <logicinfo> logic_expr 
 
 %nonassoc OR 
 %nonassoc AND
@@ -217,6 +222,7 @@ term: term MULTIPLY factor          {
     ;
 
 factor: VAR                         {   
+                                        //check if the variable is defined in the symbol table
                                         printf("factor: VARs\n");
                                     } 
       | INT_VALUE                   { 
@@ -246,10 +252,22 @@ factor: VAR                         {
 
 //logic_expr:TRUE
 
-logic_expr:'(' logic_expr ')'                              {printf("(logic_expr)\n")}
-          |logic_expr OR logic_expr                 {printf("logic_expr || logic_expr\n")}
-          |logic_expr AND logic_expr                {printf("logic_expr && logic_expr\n")}
-          |NOT logic_expr                           {printf("!logic_expr\n")}
+logic_expr:'(' logic_expr ')'                       {
+                                                        $$.bval = $2.bval;
+                                                        printf("(logic_expr) => %s\n", $$.bval ? "true" : "false");
+                                                    }
+          |logic_expr OR logic_expr                 {
+                                                        $$.bval = $1.bval || $3.bval; 
+                                                        printf("logic_expr || logic_expr\n")
+                                                    }
+          |logic_expr AND logic_expr                { 
+                                                        $$.bval = $1.bval && $3.bval;
+                                                        printf("logic_expr && logic_expr\n")
+                                                    }
+          |NOT logic_expr                           {
+                                                        $$.bval = !$2.bval;
+                                                        printf("!logic_expr\n")
+                                                    }
           |math_expr GreaterThanOrEqual math_expr {printf("statement >= statement\n")}
           |math_expr GreaterThan math_expr        {printf("statement > statement\n")}
           |math_expr EqualEqual math_expr         {printf("statement == statement\n")}
@@ -259,8 +277,14 @@ logic_expr:'(' logic_expr ')'                              {printf("(logic_expr)
           |VAR IS TRUE
           |VAR IS FALSE
           |VAR MATCH CHAR_VALUE
-          |TRUE                                     {printf("True\n")}
-          |FALSE                                    {printf("False\n")}
+          |TRUE                                     { 
+                                                        $$.bval = 1;
+                                                        printf("%s\n", $$.bval ? "true" : "false");
+                                                    }
+          |FALSE                                    {   
+                                                        $$.bval = 0;
+                                                        printf("%s\n", $$.bval ? "true" : "false");
+                                                    }
           ;
    
  
