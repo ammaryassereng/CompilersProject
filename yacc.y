@@ -18,6 +18,7 @@
     struct info{
     int typeId; //0-int, 1-float, 2-char
     int ival;
+    float fval;
   }info;                           
 };
 
@@ -30,7 +31,7 @@
 %token <floatVal> DECIMAL_VALUE              
 %token <charVal> CHAR_VALUE
 
-%type <info> factor
+%type <info> factor term math_expr
 
 %nonassoc OR 
 %nonassoc AND
@@ -95,15 +96,59 @@ const_declaration : CONST INT VAR EQUAL math_expr
                   | CONST CHAR VAR EQUAL FUNCTION_CALL
                   ;
    
-math_expr: math_expr PLUS term {printf("math_expr: PLUS term() = %d\n",tokensVal[tokenValId-2] + tokensVal[tokenValId-1] );} 
-         | math_expr MINUS term {printf("math_expr: MINUS term()\n");} 
-         | term {printf("math_expr: term()\n");}
+math_expr: math_expr PLUS term      {   
+                                        //check if the type of the expression is the same as the type of the variable
+                                        if($1.typeId != $3.typeId)
+                                            {
+                                                printf("Error: Type mismatch in math expression\n");
+                                                exit(1);
+                                            }
+                                        if($1.typeId == 0)
+                                        {
+                                            $$.typeId = 0;
+                                            $$.ival = $1.ival + $3.ival;
+                                            printf("int => math_expr: PLUS term() = %d\n", $$.ival);
+                                        }
+                                        else if($1.typeId == 1)
+                                        {
+                                            $$.typeId = 1;
+                                            $$.fval = $1.fval + $3.fval;
+                                            printf("float => math_expr: PLUS term() = %f\n", $$.fval);
+                                        }
+                                    } 
+         | math_expr MINUS term     {   
+                                        printf("math_expr: MINUS term()\n");
+                                    } 
+         | term                     { 
+                                        $$.typeId = $1.typeId;
+                                        if($1.typeId == 0)
+                                        {   
+                                            $$.ival = $1.ival;
+                                            printf("int => term = %d and typeId:%d \n" , $1.ival , $1.typeId );
+                                        }
+                                        else {
+                                            $$.fval = $1.fval;
+                                            printf("float => term = %f and typeId:%d \n" , $1.fval , $1.typeId );
+                                        }
+                                    }
          ;
 
 term: term MULTIPLY factor {printf("term: * factor()\n");} 
     | term DIVISIDE factor {printf("term: / factor()\n");} 
-    | factor {printf("factor = %d and typeId:%d \n" , tokensVal[tokenValId - 1] , $1.typeId );}
+    | factor                        { 
+                                        $$.typeId = $1.typeId;
+                                        if($1.typeId == 0)
+                                        {   
+                                            $$.ival = $1.ival;
+                                            printf("int => factor = %d and typeId:%d \n" , $1.ival , $1.typeId );
+                                        }
+                                        else {
+                                            $$.fval = $1.fval;
+                                            printf("float => factor = %f and typeId:%d \n" , $1.fval , $1.typeId );
+                                        }
+                                    }
     ;
+
 factor: VAR                         {   
                                         printf("factor: VARs\n");
                                     } 
@@ -113,9 +158,10 @@ factor: VAR                         {
                                         $$.ival = $1;
                                         printf("factor: INT_VALUE = %d\n",$1);
                                     } 
-      | DECIMAL_VALUE               { 
+      | DECIMAL_VALUE               {
                                         $$.typeId = 1; // float type
-                                        printf("factor: DECIMAL_VALUE = %d\n",$1);
+                                        $$.fval = $1; // float type
+                                        printf("factor: DECIMAL_VALUE = %f\n",$1);
                                     } 
       | '(' math_expr ')' {printf("factor: (math_expr))\n");}
       ;
