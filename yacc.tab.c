@@ -535,13 +535,13 @@ static const yytype_uint16 yyrline[] =
       59,    60,    61,    64,    65,    66,    67,    68,    69,    70,
       71,    75,    76,    77,    78,    79,    80,    81,    82,    83,
       84,    85,    86,    89,    90,    91,    92,    93,    94,    95,
-      96,    99,   119,   122,   136,   137,   138,   152,   155,   161,
-     166,   171,   172,   173,   174,   175,   176,   177,   178,   179,
-     180,   181,   182,   183,   184,   185,   189,   190,   191,   192,
-     195,   198,   199,   212,   214,   216,   218,   219,   220,   221,
-     222,   223,   226,   229,   231,   232,   233,   234,   237,   238,
-     239,   240,   241,   242,   243,   244,   247,   250,   250,   252,
-     253,   254,   255,   256,   259,   260,   261,   262,   263,   264
+      96,    99,   122,   145,   159,   182,   205,   219,   222,   228,
+     233,   249,   250,   251,   252,   253,   254,   255,   256,   257,
+     258,   259,   260,   261,   262,   263,   267,   268,   269,   270,
+     273,   276,   277,   290,   292,   294,   296,   297,   298,   299,
+     300,   301,   304,   307,   309,   310,   311,   312,   315,   316,
+     317,   318,   319,   320,   321,   322,   325,   328,   328,   330,
+     331,   332,   333,   334,   337,   338,   339,   340,   341,   342
 };
 #endif
 
@@ -1683,10 +1683,13 @@ yyreduce:
                                         //check if the type of the expression is the same as the type of the variable
                                         if((yyvsp[(1) - (3)].info).typeId != (yyvsp[(3) - (3)].info).typeId)
                                             {
-                                                printf("Error: Type mismatch in math expression\n");
-                                                exit(1);
+                                                printf("WARNING: Type mismatch would cause up casting\n");
+                                                (yyval.info).typeId = 1;
+                                                if((yyvsp[(1) - (3)].info).typeId == 1) (yyval.info).fval = (yyvsp[(1) - (3)].info).fval + (yyvsp[(3) - (3)].info).ival;
+                                                else (yyval.info).fval = (yyvsp[(1) - (3)].info).ival + (yyvsp[(3) - (3)].info).fval;
+                                                printf("float => math_expr: PLUS term() = %f\n", (yyval.info).fval);
                                             }
-                                        if((yyvsp[(1) - (3)].info).typeId == 0)
+                                        else if((yyvsp[(1) - (3)].info).typeId == 0)
                                         {
                                             (yyval.info).typeId = 0;
                                             (yyval.info).ival = (yyvsp[(1) - (3)].info).ival + (yyvsp[(3) - (3)].info).ival;
@@ -1704,16 +1707,36 @@ yyreduce:
   case 42:
 
 /* Line 1455 of yacc.c  */
-#line 119 "yacc.y"
+#line 122 "yacc.y"
     {   
-                                        printf("math_expr: MINUS term()\n");
+                                        //check if the type of the expression is the same as the type of the variable
+                                        if((yyvsp[(1) - (3)].info).typeId != (yyvsp[(3) - (3)].info).typeId)
+                                            {
+                                                printf("WARNING: Type mismatch would cause up casting\n");
+                                                (yyval.info).typeId = 1;
+                                                if((yyvsp[(1) - (3)].info).typeId == 1) (yyval.info).fval = (yyvsp[(1) - (3)].info).fval - (yyvsp[(3) - (3)].info).ival;
+                                                else (yyval.info).fval = (yyvsp[(1) - (3)].info).ival - (yyvsp[(3) - (3)].info).fval;
+                                                printf("float => math_expr: MINUS term() = %f\n", (yyval.info).fval);
+                                            }
+                                        else if((yyvsp[(1) - (3)].info).typeId == 0)
+                                        {
+                                            (yyval.info).typeId = 0;
+                                            (yyval.info).ival = (yyvsp[(1) - (3)].info).ival - (yyvsp[(3) - (3)].info).ival;
+                                            printf("int => math_expr: MINUS term() = %d\n", (yyval.info).ival);
+                                        }
+                                        else if((yyvsp[(1) - (3)].info).typeId == 1)
+                                        {
+                                            (yyval.info).typeId = 1;
+                                            (yyval.info).fval = (yyvsp[(1) - (3)].info).fval - (yyvsp[(3) - (3)].info).fval;
+                                            printf("float => math_expr: MINUS term() = %f\n", (yyval.info).fval);
+                                        }
                                     ;}
     break;
 
   case 43:
 
 /* Line 1455 of yacc.c  */
-#line 122 "yacc.y"
+#line 145 "yacc.y"
     { 
                                         (yyval.info).typeId = (yyvsp[(1) - (1)].info).typeId;
                                         if((yyvsp[(1) - (1)].info).typeId == 0)
@@ -1731,21 +1754,65 @@ yyreduce:
   case 44:
 
 /* Line 1455 of yacc.c  */
-#line 136 "yacc.y"
-    {printf("term: * factor()\n");;}
+#line 159 "yacc.y"
+    { 
+                                        //check if the type of the expression is the same as the type of the variable
+                                        if((yyvsp[(1) - (3)].info).typeId != (yyvsp[(3) - (3)].info).typeId)
+                                            {
+                                                printf("WARNING: Type mismatch would cause up casting\n");
+                                                (yyval.info).typeId = 1;
+                                                if((yyvsp[(1) - (3)].info).typeId == 1) (yyval.info).fval = (yyvsp[(1) - (3)].info).fval * (yyvsp[(3) - (3)].info).ival;
+                                                else (yyval.info).fval = (yyvsp[(1) - (3)].info).ival * (yyvsp[(3) - (3)].info).fval;
+                                                printf("float => term MULTIPLY factor() = %f\n", (yyval.info).fval);
+                                            }
+                                        else if((yyvsp[(1) - (3)].info).typeId == 0)
+                                        {
+                                            (yyval.info).typeId = 0;
+                                            (yyval.info).ival = (yyvsp[(1) - (3)].info).ival * (yyvsp[(3) - (3)].info).ival;
+                                            printf("int => term MULTIPLY factor() = %d\n", (yyval.info).ival);
+                                        }
+                                        else if((yyvsp[(1) - (3)].info).typeId == 1)
+                                        {
+                                            (yyval.info).typeId = 1;
+                                            (yyval.info).fval = (yyvsp[(1) - (3)].info).fval * (yyvsp[(3) - (3)].info).fval;
+                                            printf("float => term MULTIPLY factor() = %f\n", (yyval.info).fval);
+                                        }
+                                    ;}
     break;
 
   case 45:
 
 /* Line 1455 of yacc.c  */
-#line 137 "yacc.y"
-    {printf("term: / factor()\n");;}
+#line 182 "yacc.y"
+    {
+                                        //check if the type of the expression is the same as the type of the variable
+                                        if((yyvsp[(1) - (3)].info).typeId != (yyvsp[(3) - (3)].info).typeId)
+                                            {
+                                                printf("WARNING: Type mismatch would cause up casting\n");
+                                                (yyval.info).typeId = 1;
+                                                if((yyvsp[(1) - (3)].info).typeId == 1) (yyval.info).fval = (yyvsp[(1) - (3)].info).fval / (yyvsp[(3) - (3)].info).ival;
+                                                else (yyval.info).fval = (yyvsp[(1) - (3)].info).ival / (yyvsp[(3) - (3)].info).fval;
+                                                printf("float => term / factor() = %f\n", (yyval.info).fval);
+                                            }
+                                        else if((yyvsp[(1) - (3)].info).typeId == 0)
+                                        {
+                                            (yyval.info).typeId = 0;
+                                            (yyval.info).ival = (yyvsp[(1) - (3)].info).ival / (yyvsp[(3) - (3)].info).ival;
+                                            printf("int => term / factor() = %d\n", (yyval.info).ival);
+                                        }
+                                        else if((yyvsp[(1) - (3)].info).typeId == 1)
+                                        {
+                                            (yyval.info).typeId = 1;
+                                            (yyval.info).fval = (yyvsp[(1) - (3)].info).fval / (yyvsp[(3) - (3)].info).fval;
+                                            printf("float => term / factor() = %f\n", (yyval.info).fval);
+                                        }
+                                    ;}
     break;
 
   case 46:
 
 /* Line 1455 of yacc.c  */
-#line 138 "yacc.y"
+#line 205 "yacc.y"
     { 
                                         (yyval.info).typeId = (yyvsp[(1) - (1)].info).typeId;
                                         if((yyvsp[(1) - (1)].info).typeId == 0)
@@ -1763,7 +1830,7 @@ yyreduce:
   case 47:
 
 /* Line 1455 of yacc.c  */
-#line 152 "yacc.y"
+#line 219 "yacc.y"
     {   
                                         printf("factor: VARs\n");
                                     ;}
@@ -1772,7 +1839,7 @@ yyreduce:
   case 48:
 
 /* Line 1455 of yacc.c  */
-#line 155 "yacc.y"
+#line 222 "yacc.y"
     { 
                                         (yyval.info).typeId = 0; // int type
                                         tokensVal[tokenValId++] = (yyvsp[(1) - (1)].intVal);
@@ -1784,7 +1851,7 @@ yyreduce:
   case 49:
 
 /* Line 1455 of yacc.c  */
-#line 161 "yacc.y"
+#line 228 "yacc.y"
     {
                                         (yyval.info).typeId = 1; // float type
                                         (yyval.info).fval = (yyvsp[(1) - (1)].floatVal); // float type
@@ -1795,238 +1862,249 @@ yyreduce:
   case 50:
 
 /* Line 1455 of yacc.c  */
-#line 166 "yacc.y"
-    {printf("factor: (math_expr))\n");;}
+#line 233 "yacc.y"
+    {
+                                        (yyval.info).typeId = (yyvsp[(2) - (3)].info).typeId;
+                                        if((yyvsp[(2) - (3)].info).typeId == 0)
+                                        {   
+                                            (yyval.info).ival = (yyvsp[(2) - (3)].info).ival;
+                                            printf("int => factor: (math_expr) = %d and typeId:%d \n" , (yyvsp[(2) - (3)].info).ival , (yyvsp[(2) - (3)].info).typeId );
+                                        }
+                                        else {
+                                            (yyval.info).fval = (yyvsp[(2) - (3)].info).fval;
+                                            printf("float => factor: (math_expr) = %f and typeId:%d \n" , (yyvsp[(2) - (3)].info).fval , (yyvsp[(2) - (3)].info).typeId );
+                                        }
+                                    ;}
     break;
 
   case 51:
 
 /* Line 1455 of yacc.c  */
-#line 171 "yacc.y"
+#line 249 "yacc.y"
     {printf("(logic_expr)\n");}
     break;
 
   case 52:
 
 /* Line 1455 of yacc.c  */
-#line 172 "yacc.y"
+#line 250 "yacc.y"
     {printf("logic_expr || logic_expr\n");}
     break;
 
   case 53:
 
 /* Line 1455 of yacc.c  */
-#line 173 "yacc.y"
+#line 251 "yacc.y"
     {printf("logic_expr && logic_expr\n");}
     break;
 
   case 54:
 
 /* Line 1455 of yacc.c  */
-#line 174 "yacc.y"
+#line 252 "yacc.y"
     {printf("!logic_expr\n");}
     break;
 
   case 55:
 
 /* Line 1455 of yacc.c  */
-#line 175 "yacc.y"
+#line 253 "yacc.y"
     {printf("statement >= statement\n");}
     break;
 
   case 56:
 
 /* Line 1455 of yacc.c  */
-#line 176 "yacc.y"
+#line 254 "yacc.y"
     {printf("statement > statement\n");}
     break;
 
   case 57:
 
 /* Line 1455 of yacc.c  */
-#line 177 "yacc.y"
+#line 255 "yacc.y"
     {printf("statement == statement\n");}
     break;
 
   case 58:
 
 /* Line 1455 of yacc.c  */
-#line 178 "yacc.y"
+#line 256 "yacc.y"
     {printf("statement <= statement\n");}
     break;
 
   case 59:
 
 /* Line 1455 of yacc.c  */
-#line 179 "yacc.y"
+#line 257 "yacc.y"
     {printf("statement < statement\n");}
     break;
 
   case 60:
 
 /* Line 1455 of yacc.c  */
-#line 180 "yacc.y"
+#line 258 "yacc.y"
     {printf("statement != statement\n");}
     break;
 
   case 64:
 
 /* Line 1455 of yacc.c  */
-#line 184 "yacc.y"
+#line 262 "yacc.y"
     {printf("True\n");}
     break;
 
   case 65:
 
 /* Line 1455 of yacc.c  */
-#line 185 "yacc.y"
+#line 263 "yacc.y"
     {printf("False\n");}
     break;
 
   case 66:
 
 /* Line 1455 of yacc.c  */
-#line 189 "yacc.y"
+#line 267 "yacc.y"
     {printf("assignment: VAR = math_expr\n");;}
     break;
 
   case 67:
 
 /* Line 1455 of yacc.c  */
-#line 190 "yacc.y"
+#line 268 "yacc.y"
     {printf("assignment: VAR = logic_expr\n");;}
     break;
 
   case 68:
 
 /* Line 1455 of yacc.c  */
-#line 191 "yacc.y"
+#line 269 "yacc.y"
     {printf("assignment: VAR = CHAR_VALUE\n");;}
     break;
 
   case 69:
 
 /* Line 1455 of yacc.c  */
-#line 192 "yacc.y"
+#line 270 "yacc.y"
     {printf("assignment: VAR = Function call\n");;}
     break;
 
   case 70:
 
 /* Line 1455 of yacc.c  */
-#line 195 "yacc.y"
+#line 273 "yacc.y"
     {printf("this is a scope\n");}
     break;
 
   case 71:
 
 /* Line 1455 of yacc.c  */
-#line 198 "yacc.y"
+#line 276 "yacc.y"
     {printf("if-then");}
     break;
 
   case 72:
 
 /* Line 1455 of yacc.c  */
-#line 199 "yacc.y"
+#line 277 "yacc.y"
     {printf("if-else");}
     break;
 
   case 96:
 
 /* Line 1455 of yacc.c  */
-#line 247 "yacc.y"
+#line 325 "yacc.y"
     {printf("function_call \n");;}
     break;
 
   case 98:
 
 /* Line 1455 of yacc.c  */
-#line 250 "yacc.y"
+#line 328 "yacc.y"
     {printf("call parameters\n");;}
     break;
 
   case 99:
 
 /* Line 1455 of yacc.c  */
-#line 252 "yacc.y"
+#line 330 "yacc.y"
     {printf("Data Var \n");;}
     break;
 
   case 100:
 
 /* Line 1455 of yacc.c  */
-#line 253 "yacc.y"
+#line 331 "yacc.y"
     {printf("Data int \n");;}
     break;
 
   case 101:
 
 /* Line 1455 of yacc.c  */
-#line 254 "yacc.y"
+#line 332 "yacc.y"
     {printf("Data floa \nt");;}
     break;
 
   case 102:
 
 /* Line 1455 of yacc.c  */
-#line 255 "yacc.y"
+#line 333 "yacc.y"
     {printf("Data char \n");;}
     break;
 
   case 103:
 
 /* Line 1455 of yacc.c  */
-#line 256 "yacc.y"
+#line 334 "yacc.y"
     {printf("Data bool \n");;}
     break;
 
   case 104:
 
 /* Line 1455 of yacc.c  */
-#line 259 "yacc.y"
+#line 337 "yacc.y"
     {printf("return Var \n");;}
     break;
 
   case 105:
 
 /* Line 1455 of yacc.c  */
-#line 260 "yacc.y"
+#line 338 "yacc.y"
     {printf("return int \n");;}
     break;
 
   case 106:
 
 /* Line 1455 of yacc.c  */
-#line 261 "yacc.y"
+#line 339 "yacc.y"
     {printf("return float \n");;}
     break;
 
   case 107:
 
 /* Line 1455 of yacc.c  */
-#line 262 "yacc.y"
+#line 340 "yacc.y"
     {printf("return char \n");;}
     break;
 
   case 108:
 
 /* Line 1455 of yacc.c  */
-#line 263 "yacc.y"
+#line 341 "yacc.y"
     {printf("return bool \n");;}
     break;
 
   case 109:
 
 /* Line 1455 of yacc.c  */
-#line 264 "yacc.y"
+#line 342 "yacc.y"
     {printf("return \n");;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 2030 "yacc.tab.c"
+#line 2108 "yacc.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2238,7 +2316,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 267 "yacc.y"
+#line 345 "yacc.y"
 
 
 int main (void) {

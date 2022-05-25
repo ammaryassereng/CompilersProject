@@ -100,10 +100,13 @@ math_expr: math_expr PLUS term      {
                                         //check if the type of the expression is the same as the type of the variable
                                         if($1.typeId != $3.typeId)
                                             {
-                                                printf("Error: Type mismatch in math expression\n");
-                                                exit(1);
+                                                printf("WARNING: Type mismatch would cause up casting\n");
+                                                $$.typeId = 1;
+                                                if($1.typeId == 1) $$.fval = $1.fval + $3.ival;
+                                                else $$.fval = $1.ival + $3.fval;
+                                                printf("float => math_expr: PLUS term() = %f\n", $$.fval);
                                             }
-                                        if($1.typeId == 0)
+                                        else if($1.typeId == 0)
                                         {
                                             $$.typeId = 0;
                                             $$.ival = $1.ival + $3.ival;
@@ -117,7 +120,27 @@ math_expr: math_expr PLUS term      {
                                         }
                                     } 
          | math_expr MINUS term     {   
-                                        printf("math_expr: MINUS term()\n");
+                                        //check if the type of the expression is the same as the type of the variable
+                                        if($1.typeId != $3.typeId)
+                                            {
+                                                printf("WARNING: Type mismatch would cause up casting\n");
+                                                $$.typeId = 1;
+                                                if($1.typeId == 1) $$.fval = $1.fval - $3.ival;
+                                                else $$.fval = $1.ival - $3.fval;
+                                                printf("float => math_expr: MINUS term() = %f\n", $$.fval);
+                                            }
+                                        else if($1.typeId == 0)
+                                        {
+                                            $$.typeId = 0;
+                                            $$.ival = $1.ival - $3.ival;
+                                            printf("int => math_expr: MINUS term() = %d\n", $$.ival);
+                                        }
+                                        else if($1.typeId == 1)
+                                        {
+                                            $$.typeId = 1;
+                                            $$.fval = $1.fval - $3.fval;
+                                            printf("float => math_expr: MINUS term() = %f\n", $$.fval);
+                                        }
                                     } 
          | term                     { 
                                         $$.typeId = $1.typeId;
@@ -133,8 +156,52 @@ math_expr: math_expr PLUS term      {
                                     }
          ;
 
-term: term MULTIPLY factor {printf("term: * factor()\n");} 
-    | term DIVISIDE factor {printf("term: / factor()\n");} 
+term: term MULTIPLY factor          { 
+                                        //check if the type of the expression is the same as the type of the variable
+                                        if($1.typeId != $3.typeId)
+                                            {
+                                                printf("WARNING: Type mismatch would cause up casting\n");
+                                                $$.typeId = 1;
+                                                if($1.typeId == 1) $$.fval = $1.fval * $3.ival;
+                                                else $$.fval = $1.ival * $3.fval;
+                                                printf("float => term MULTIPLY factor() = %f\n", $$.fval);
+                                            }
+                                        else if($1.typeId == 0)
+                                        {
+                                            $$.typeId = 0;
+                                            $$.ival = $1.ival * $3.ival;
+                                            printf("int => term MULTIPLY factor() = %d\n", $$.ival);
+                                        }
+                                        else if($1.typeId == 1)
+                                        {
+                                            $$.typeId = 1;
+                                            $$.fval = $1.fval * $3.fval;
+                                            printf("float => term MULTIPLY factor() = %f\n", $$.fval);
+                                        }
+                                    } 
+    | term DIVISIDE factor          {
+                                        //check if the type of the expression is the same as the type of the variable
+                                        if($1.typeId != $3.typeId)
+                                            {
+                                                printf("WARNING: Type mismatch would cause up casting\n");
+                                                $$.typeId = 1;
+                                                if($1.typeId == 1) $$.fval = $1.fval / $3.ival;
+                                                else $$.fval = $1.ival / $3.fval;
+                                                printf("float => term / factor() = %f\n", $$.fval);
+                                            }
+                                        else if($1.typeId == 0)
+                                        {
+                                            $$.typeId = 0;
+                                            $$.ival = $1.ival / $3.ival;
+                                            printf("int => term / factor() = %d\n", $$.ival);
+                                        }
+                                        else if($1.typeId == 1)
+                                        {
+                                            $$.typeId = 1;
+                                            $$.fval = $1.fval / $3.fval;
+                                            printf("float => term / factor() = %f\n", $$.fval);
+                                        }
+                                    } 
     | factor                        { 
                                         $$.typeId = $1.typeId;
                                         if($1.typeId == 0)
@@ -163,7 +230,18 @@ factor: VAR                         {
                                         $$.fval = $1; // float type
                                         printf("factor: DECIMAL_VALUE = %f\n",$1);
                                     } 
-      | '(' math_expr ')' {printf("factor: (math_expr))\n");}
+      | '(' math_expr ')'           {
+                                        $$.typeId = $2.typeId;
+                                        if($2.typeId == 0)
+                                        {   
+                                            $$.ival = $2.ival;
+                                            printf("int => factor: (math_expr) = %d and typeId:%d \n" , $2.ival , $2.typeId );
+                                        }
+                                        else {
+                                            $$.fval = $2.fval;
+                                            printf("float => factor: (math_expr) = %f and typeId:%d \n" , $2.fval , $2.typeId );
+                                        }
+                                    }
       ;
 
 //logic_expr:TRUE
