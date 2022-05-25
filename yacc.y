@@ -280,14 +280,41 @@ logic_expr:'(' logic_expr ')'                       {
                                                         $$.bval = (($1.typeId == 0) ? $1.ival :$1.fval) >= (($3.typeId == 0) ? $3.ival :$3.fval);
                                                         printf("statement >= statement\n")
                                                     }
-          |math_expr GreaterThan math_expr        {printf("statement > statement\n")}
-          |math_expr EqualEqual math_expr         {printf("statement == statement\n")}
-          |math_expr LessThanOrEqual math_expr    {printf("statement <= statement\n")}
-          |math_expr LessThan math_expr           {printf("statement < statement\n")}
-          |math_expr NotEqual math_expr           {printf("statement != statement\n")}
-          |VAR IS TRUE
-          |VAR IS FALSE
-          |VAR MATCH CHAR_VALUE
+          |math_expr GreaterThan math_expr          {   
+                                                        $$.bval = (($1.typeId == 0) ? $1.ival :$1.fval) > (($3.typeId == 0) ? $3.ival :$3.fval);
+                                                        printf("statement > statement\n")
+                                                    }
+          |math_expr EqualEqual math_expr           {   
+                                                        $$.bval = (($1.typeId == 0) ? $1.ival :$1.fval) == (($3.typeId == 0) ? $3.ival :$3.fval);
+                                                        printf("statement == statement\n")
+                                                    }
+          |math_expr LessThanOrEqual math_expr      {   
+                                                        $$.bval = (($1.typeId == 0) ? $1.ival :$1.fval) <= (($3.typeId == 0) ? $3.ival :$3.fval);
+                                                        printf("statement <= statement\n")
+                                                    }
+          |math_expr LessThan math_expr             {
+                                                        $$.bval = (($1.typeId == 0) ? $1.ival :$1.fval) < (($3.typeId == 0) ? $3.ival :$3.fval);   
+                                                        printf("statement < statement\n")
+                                                    }
+          |math_expr NotEqual math_expr             {  
+                                                        $$.bval = (($1.typeId == 0) ? $1.ival :$1.fval) != (($3.typeId == 0) ? $3.ival :$3.fval); 
+                                                        printf("statement != statement\n")
+                                                    }
+          |VAR IS TRUE                              {
+                                                        //check if the variable is defined in the symbol table
+                                                        //getboolvalue($1);
+                                                        printf("VAR IS TRUE\n");
+                                                    }
+          |VAR IS FALSE                             {
+                                                        //check if the variable is defined in the symbol table
+                                                        //getboolvalue($1);
+                                                        printf("VAR IS FALSE\n");
+                                                    }
+          |VAR MATCH CHAR_VALUE                     {
+                                                        //check if the variable is defined in the symbol table
+                                                        //getcharvalue($1);
+                                                        printf("VAR MATCH CHAR_VALUE\n");
+                                                    }
           |TRUE                                     { 
                                                         $$.bval = 1;
                                                         printf("%s\n", $$.bval ? "true" : "false");
