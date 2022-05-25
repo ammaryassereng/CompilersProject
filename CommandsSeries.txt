@@ -1,0 +1,6 @@
+flex lex.l
+bison -d yacc.y
+gcc -std=gnu99 -c lex.yy.c yacc.tab.c
+g++ -Wall -Wextra -Werror -std=gnu++11 -c header.cpp
+g++ -o c.exe lex.yy.o yacc.tab.o header.o -static
+c.exe

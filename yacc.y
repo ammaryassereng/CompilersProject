@@ -3,11 +3,14 @@
     #include <stdlib.h> 
     #include <stdarg.h> 
     #include <string.h> 
+    #include "header.h"
     FILE *yyin;
     extern int yylex(void);
     extern void yyerror(char *);
     int tokenValId = 0; 
     int tokensVal [10];
+
+
 %}
 
 %union {
@@ -419,6 +422,20 @@ RETURN_STATEMENT: RETURN VAR            {printf("return Var \n");}
 %%
 
 int main (void) {
+
+    PrintFunc(1000);
+
+    NewLevel();
+    printf("%d\n",InsertNewIntElement(0,0,"x",0,5));
+    printf("%d\n",InsertNewIntElement(0,0,"x",0,6));
+    printf("%d\n",UpdateIntVal(0,0,"x",0,6));
+    NewLevel();
+    printf("%d\n",InsertNewIntElement(0,0,"x",1,5));
+    printf("%d\n",InsertNewIntElement(0,0,"x",1,5));
+    removeLevel();
+    printf("%d\n",InsertNewIntElement(0,0,"x",0,5));
+    removeLevel();
+
     /*yyin = fopen("testfile.txt","r+");
     if(yyin ==NULL){
         printf("File Not Found\n");
