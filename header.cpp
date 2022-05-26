@@ -90,7 +90,7 @@ int GetExistingVarLevel(string VarName, int level)
     {
         for (int i = level; i >= 0; i--)
         {
-            if (scopes[level].find(VarName) != scopes[level].end())
+            if (scopes[i].find(VarName) != scopes[i].end())
             {
                 return i;
             }
@@ -265,7 +265,6 @@ char* GetInfo(char* name, int level, int* type, int* isconstant, int* isset)
 {
     string str = name;
     int Exist = GetExistingVarLevel(str, level);
-
     if(Exist == -1)
         return (char*)"ERROR! Variable not declared";
     

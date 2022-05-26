@@ -14,11 +14,12 @@
     
     void DecAndInit(char* VarName, int scopeID, int* type, int* isconst)
     {
-        if(strcmp (GetInfo($1.lexeme,scopeId,type,isconst,isset), (char*)"1") != 0)
-        {   printf("VAR %s :not declared scopeId:%d",$1.lexeme,scopeId);
+        int isset;
+        if(strcmp (GetInfo(VarName,scopeId,type,isconst,&isset), (char*)"1") != 0)
+        {   printf("VAR %s :not declared scopeId:%d",VarName,scopeId);
             exit(0);
         }else if(isset != 1){
-        printf("VAR %s :not initialized scopeId:%d",$1.lexeme,scopeId);
+        printf("VAR %s :not initialized scopeId:%d",VarName,scopeId);
             exit(0);
         }
     }
@@ -247,7 +248,6 @@ math_expr: math_expr PLUS term      {
                                                 $$.typeId = 1;
                                                 if($1.typeId == 1) $$.fval = $1.fval + $3.ival;
                                                 else $$.fval = $1.ival + $3.fval;
-                                                printf("float => math_expr: PLUS term() = %f\n", $$.fval);
                                             }
                                         else if($1.typeId == 0)
                                         {
@@ -412,58 +412,21 @@ factor: VAR                         {
 logic_expr:'(' logic_expr ')'                       {
                                                         $$.bval = $2.bval;
                                                         printf("(logic_expr) => %s\n", $$.bval ? "true" : "false");
-                                                    }
-          |VAR OR VAR                               {  
-                                                        int type1,type2, isconst;
-                                                        DecAndInit($1.lexeme,scopeId,type,isconst);
-                                                        DecAndInit($3.lexeme,scopeId,type2,isconst);
-                                                        if (type1 == 3 && type2 == 3 ){//type bool
-                                                            $$.bval = GetBoolVal($1.lexeme,scopeId) || GetBoolVal($3.lexeme,scopeId);
-                                                        }else   
-                                                            yyerror("Type mismatch logic_expr");
                                                     }                              
           |logic_expr OR logic_expr                 {
                                                         $$.bval = $1.bval || $3.bval; 
-                                                        printf("logic_expr || logic_expr\n")
                                                     }
           |logic_expr AND logic_expr                { 
                                                         $$.bval = $1.bval && $3.bval;
-                                                        printf("logic_expr && logic_expr\n")
                                                     }
           |NOT logic_expr                           {
                                                         $$.bval = !$2.bval;
-                                                        printf("!logic_expr\n")
                                                     }
           |NOT VAR                                  {
-                                                        int type;
-                                                        DecAndInit($2.lexeme,scopeId,type,isconst);
+                                                        int type,isconst;
+                                                        DecAndInit($2.lexeme,scopeId,&type,&isconst);
                                                         if (type == 3 ){//type bool
                                                             $$.bval = !GetBoolVal($2.lexeme,scopeId);
-                                                        }else   
-                                                            yyerror("Type mismatch logic_expr");
-                                                    }
-          |VAR AND logic_expr                       {
-                                                        int type;
-                                                        DecAndInit($1.lexeme,scopeId,type,isconst);
-                                                        if (type == 3 ){//type bool
-                                                            $$.bval = GetBoolVal($1.lexeme,scopeId) && $3.bval;
-                                                        }else   
-                                                            yyerror("Type mismatch logic_expr");
-                                                    }
-          |VAR AND VAR                              {
-                                                         int type1,type2, isconst;
-                                                        DecAndInit($1.lexeme,scopeId,type,isconst);
-                                                        DecAndInit($3.lexeme,scopeId,type2,isconst);
-                                                        if (type1 == 3 && type2 == 3 ){//type bool
-                                                            $$.bval = GetBoolVal($1.lexeme,scopeId) && GetBoolVal($3.lexeme,scopeId);
-                                                        }else   
-                                                            yyerror("Type mismatch logic_expr");
-                                                    }
-          |logic_expr AND VAR                       {
-                                                        int type;
-                                                        DecAndInit($3.lexeme,scopeId,type,isconst);
-                                                        if (type == 3 ){//type bool
-                                                            $$.bval = GetBoolVal($3.lexeme,scopeId) && $1.bval;
                                                         }else   
                                                             yyerror("Type mismatch logic_expr");
                                                     }
@@ -492,19 +455,36 @@ logic_expr:'(' logic_expr ')'                       {
                                                         printf("statement != statement\n")
                                                     }
           |VAR IS TRUE                              {
-                                                        //check if the variable is defined in the symbol table
-                                                        //getboolvalue($1);
-                                                        printf("VAR IS TRUE\n");
+                                                        int type,isconst;
+                                                        DecAndInit($1.lexeme,scopeId,&type,&isconst);
+                                                        if (type == 3 ){//type bool
+                                                            //$$.bval = !GetBoolVal($1.lexeme,scopeId);
+                                                            if(GetBoolVal($1.lexeme,scopeId) == 1)
+                                                                $$.bval = 1;
+                                                            else
+                                                                $$.bval = 0;
+                                                        }else   
+                                                            yyerror("Type mismatch logic_expr");   
+                                                        
                                                     }
           |VAR IS FALSE                             {
-                                                        //check if the variable is defined in the symbol table
-                                                        //getboolvalue($1);
-                                                        printf("VAR IS FALSE\n");
+                                                        int type,isconst;
+                                                        DecAndInit($1.lexeme,scopeId,&type,&isconst);
+                                                        if (type == 3 ){//type bool
+                                                            $$.bval = !GetBoolVal($1.lexeme,scopeId) ? 1 : 0;
+                                                        }else   
+                                                            yyerror("Type mismatch logic_expr");
                                                     }
           |VAR MATCH CHAR_VALUE                     {
-                                                        //check if the variable is defined in the symbol table
-                                                        //getcharvalue($1);
-                                                        printf("VAR MATCH CHAR_VALUE\n");
+                                                        int type,isconst;
+                                                        DecAndInit($1.lexeme,scopeId,&type,&isconst);
+                                                        if (type == 2 ){//type char
+                                                            if(GetCharVal($1.lexeme,scopeId) == $3) 
+                                                                $$.bval = 1;
+                                                            else 
+                                                                $$.bval = 0;
+                                                        }else   
+                                                            yyerror("Type mismatch logic_expr");
                                                     }
           |TRUE                                     { 
                                                         $$.bval = 1;
@@ -517,10 +497,16 @@ logic_expr:'(' logic_expr ')'                       {
           ;
    
  
-assignment: VAR EQUAL math_expr {printf("assignment: VAR = math_expr\n");}
-           | VAR EQUAL logic_expr {printf("assignment: VAR = logic_expr\n");}
-           | VAR EQUAL CHAR_VALUE {printf("assignment: VAR = CHAR_VALUE\n");}
-           | VAR EQUAL FUNCTION_CALL {printf("assignment: VAR = Function call\n");}
+assignment: VAR EQUAL math_expr                     {
+                                                        printf("assignment: VAR = math_expr\n");
+                                                    }
+           | VAR EQUAL logic_expr                   {
+                                                        printf("assignment: VAR = logic_expr\n");
+                                                    }
+           | VAR EQUAL CHAR_VALUE                   {
+                                                        printf("assignment: VAR = CHAR_VALUE\n");
+                                                    }
+           | VAR EQUAL FUNCTION_CALL                {printf("assignment: VAR = Function call\n");}
           ;
 
 StartScope: SCOPE_OPEN  {scopeId++; NewLevel();};
@@ -602,7 +588,6 @@ RETURN_STATEMENT: RETURN VAR            {printf("return Var \n");}
 
 int main (void) {
     
-    PrintFunc(1000);
     NewLevel();
 
     /*PrintFunc(1000);
