@@ -336,13 +336,11 @@ term: term MULTIPLY factor          {
                                         {
                                             $$.typeId = 0;
                                             $$.ival = $1.ival / $3.ival;
-                                            printf("int => term / factor() = %d\n", $$.ival);
                                         }
                                         else if($1.typeId == 1)
                                         {
                                             $$.typeId = 1;
                                             $$.fval = $1.fval / $3.fval;
-                                            printf("float => term / factor() = %f\n", $$.fval);
                                         }
                                     } 
     | factor                        { 
@@ -352,7 +350,7 @@ term: term MULTIPLY factor          {
                                             $$.ival = $1.ival;
                                             printf("int => factor = %d and typeId:%d \n" , $1.ival , $1.typeId );
                                         }
-                                        else if($1.typeId == 0) {
+                                        else if($1.typeId == 1) {
                                             $$.fval = $1.fval;
                                             printf("float => factor = %f and typeId:%d \n" , $1.fval , $1.typeId );
                                         }
@@ -498,12 +496,64 @@ logic_expr:'(' logic_expr ')'                       {
    
  
 assignment: VAR EQUAL math_expr                     {
-                                                        printf("assignment: VAR = math_expr\n");
+                                                        int type, isconst, isset;
+                                                        if(strcmp (GetInfo($1.lexeme,scopeId,&type,&isconst,&isset), (char*)"1") != 0)
+                                                        {   printf("VAR %s :not declared scopeId:%d",$1.lexeme,scopeId);
+                                                            exit(0);
+                                                        }
+                                                    if ((type == 3 && $3.typeId != 3) || (type != 3 && $3.typeId == 3 ))
+                                                        yyerror("ERROR: Invalid variable assignment");     
+                                                    if (type != 0 && type != 1) 
+                                                        yyerror("ERROR: Invalid variable assignment");   
+                                                    char cval[10];
+                                                    if ($3.typeId == 0)
+                                                        sprintf(cval, "%d", $3.ival);
+                                                    else if ($3.typeId == 1)
+                                                        sprintf(cval, "%d", $3.fval);
+                                                    else if ($3.typeId == 3)
+                                                        sprintf(cval, "%d", $3.bval);
+                                                    char *res = UpdateVal(type, $1.lexeme, scopeId, cval);
+                                                    if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                            exit(0);
+                                                        }
+                                                    printf("assignment: VAR = math_expr\n");
                                                     }
            | VAR EQUAL logic_expr                   {
+                                                     int type, isconst, isset;
+                                                    if(strcmp (GetInfo($1.lexeme,scopeId,&type,&isconst,&isset), (char*)"1") != 0)
+                                                        {   printf("VAR %s :not declared scopeId:%d",$1.lexeme,scopeId);
+                                                            exit(0);
+                                                        }
+                                                     if (type != 3)
+                                                        yyerror("ERROR: Invalid variable assignment");
+                                                    char cval[10];
+                                                    sprintf(cval, "%d", $3.bval);
+                                                    char *res = UpdateVal(type, $1.lexeme, scopeId, cval);
+                                                    if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                            exit(0);
+                                                        }  
                                                         printf("assignment: VAR = logic_expr\n");
                                                     }
            | VAR EQUAL CHAR_VALUE                   {
+                                                    int type, isconst, isset;
+                                                    if(strcmp (GetInfo($1.lexeme,scopeId,&type,&isconst,&isset), (char*)"1") != 0)
+                                                        {   printf("VAR %s :not declared scopeId:%d",$1.lexeme,scopeId);
+                                                            exit(0);
+                                                        }
+                                                     if (type != 2)
+                                                        yyerror("ERROR: Invalid variable assignment");
+                                                    char cval[1];
+                                                    cval[0] = $3;
+                                                    char *res = UpdateVal(type, $1.lexeme, scopeId, cval);
+                                                    if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                            exit(0);
+                                                        }  
                                                         printf("assignment: VAR = CHAR_VALUE\n");
                                                     }
            | VAR EQUAL FUNCTION_CALL                {printf("assignment: VAR = Function call\n");}

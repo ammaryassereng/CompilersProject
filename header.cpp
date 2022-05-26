@@ -215,6 +215,7 @@ char* UpdateVal(int type, char *name, int level, char *data)
     }
 
     struct element Nele = scopes[Exist][str];
+    Nele.IsSet = true;
 
     string Val = data;
 
