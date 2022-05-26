@@ -427,9 +427,42 @@ RETURN_STATEMENT: RETURN VAR            {printf("return Var \n");}
 
 int main (void) {
 
-    PrintFunc(1000);
 
+    PrintFunc(1000);
     NewLevel();
+    printf("%d\n",InserNewElement(0,0,"x",0,"5"));
+    
+    int type;
+    int isconst;
+    int isset;
+
+    GetInfo("x",0,&type,&isconst,&isset);
+
+    printf("%d\n",type);
+    printf("%d\n",isconst);
+    printf("%d\n",isset);
+    printf("%d\n",GetIntVal("x",0));
+    printf("%d\n",UpdateVal(0,"x",0,"6"));
+    printf("%d\n",GetIntVal("x",0));
+
+    printf("%d\n",InserNewElement(1,0,"y",0,"5.3"));
+    printf("%f\n",GetFloatVal("y",0));
+    printf("%d\n",UpdateVal(1,"y",0,"6.7"));
+    printf("%f\n",GetFloatVal("y",0));
+
+    printf("%d\n",InserNewElement(2,0,"z",0,"a"));
+    printf("%c\n",GetCharVal("z",0));
+    printf("%d\n",UpdateVal(2,"z",0,"b"));
+    printf("%c\n",GetCharVal("z",0));
+
+    printf("%d\n",InserNewElement(3,0,"m",0,"1"));
+    printf("%d\n",GetBoolVal("m",0));
+    printf("%d\n",UpdateVal(3,"m",0,"0"));
+    printf("%d\n",GetBoolVal("m",0));
+
+
+    /*PrintFunc(1000);
+    NewLevel();*
 
     /*printf("declared new varable %d\n",InsertNewIntElement(0,0,"y",0,0));
     printf("declared new varable %d\n",InsertNewIntElement(0,0,"y",0,0));
