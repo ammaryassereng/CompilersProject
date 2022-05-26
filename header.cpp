@@ -4,6 +4,8 @@
 #include <unordered_map>
 #include <string>
 #include <vector>
+#include <fstream>
+
 using namespace std;
 
 struct element
@@ -18,6 +20,9 @@ struct element
     bool boolvalue;
     bool IsSet;
 };
+
+ofstream myfile;
+
 
 /*unordered_map<char*,struct element> SymbolTable;
 
@@ -63,6 +68,8 @@ bool IsDigits(string str)
 {
     for (int i = 0; i < (int)str.size(); i++)
     {
+        if(str[0] == '-')
+            continue;
         if (!(str[i] == '0' || str[i] == '1' || str[i] == '2' || str[i] == '3' || str[i] == '4' || str[i] == '5' || str[i] == '6' || str[i] == '7' || str[i] == '8' || str[i] == '9'))
             return false;
     }
@@ -74,6 +81,8 @@ bool Isfloat(string str)
     bool foundDot = false;
     for (int i = 0; i < (int)str.size(); i++)
     {
+        if(str[0] == '-')
+            continue;
         if (str[i] == '0' || str[i] == '1' || str[i] == '2' || str[i] == '3' || str[i] == '4' || str[i] == '5' || str[i] == '6' || str[i] == '7' || str[i] == '8' || str[i] == '9')
             continue;
         else if (str[i] == '.' && foundDot == false)
@@ -105,12 +114,48 @@ int GetExistingVarLevel(string VarName, int level)
 
 void NewLevel()
 {
+    if(!myfile.is_open())
+        myfile.open ("SymbolTable.txt");
     unordered_map<string, element> val;
     scopes.push_back(val);
 }
 
 void removeLevel()
 {
+    int currlevel = scopes.size() - 1;
+    myfile << currlevel <<endl;
+    for(pair<string,element>Variable : scopes[currlevel])
+    {
+        string dataToPrint = Variable.second.VarName;
+
+        if(Variable.second.type == 0)
+            dataToPrint += " type: int, value = " + to_string(Variable.second.intval);
+        else if(Variable.second.type == 1)
+            dataToPrint += " type: float, value = " + to_string(Variable.second.floatval);
+        else if(Variable.second.type == 2)
+        {
+            dataToPrint += " type: char, value = " + to_string(Variable.second.charval);
+        }
+        else if(Variable.second.type == 3)
+            dataToPrint += " type: bool, value = " + to_string(Variable.second.boolvalue);
+        
+        if(Variable.second.isConstant == true)
+            dataToPrint += " Constant: true";
+        else
+            dataToPrint += " Constant: false";
+
+        if(Variable.second.IsSet)
+            dataToPrint += " initiallized: true";
+        else
+            dataToPrint += " initiallized: false";
+
+        myfile << dataToPrint <<endl;
+
+    }
+    if(currlevel == 0)
+    {
+        myfile.close();
+    }
     scopes.pop_back();
 }
 

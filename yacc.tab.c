@@ -96,9 +96,8 @@
     }
 
 
-
 /* Line 189 of yacc.c  */
-#line 102 "yacc.tab.c"
+#line 101 "yacc.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -181,7 +180,7 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 29 "yacc.y"
+#line 28 "yacc.y"
 
     int intVal;    
     char charVal;               
@@ -210,7 +209,7 @@ typedef union YYSTYPE
 
 
 /* Line 214 of yacc.c  */
-#line 214 "yacc.tab.c"
+#line 213 "yacc.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -222,7 +221,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 226 "yacc.tab.c"
+#line 225 "yacc.tab.c"
 
 #ifdef short
 # undef short
@@ -563,18 +562,18 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    80,    80,    81,    83,    84,    87,    88,    89,    90,
-      91,    92,    93,    96,    97,    98,    99,   100,   101,   102,
-     103,   107,   111,   115,   119,   123,   140,   157,   167,   177,
-     178,   179,   180,   183,   200,   217,   227,   237,   238,   239,
-     240,   243,   265,   288,   302,   325,   346,   360,   384,   389,
-     394,   410,   414,   417,   420,   423,   431,   435,   439,   443,
-     447,   451,   455,   468,   476,   487,   491,   498,   523,   541,
-     559,   562,   563,   565,   568,   569,   582,   584,   586,   588,
-     589,   590,   591,   592,   593,   596,   599,   601,   602,   603,
-     604,   607,   608,   609,   610,   611,   612,   613,   614,   617,
-     620,   620,   622,   623,   624,   625,   626,   629,   630,   631,
-     632,   633,   634
+       0,    79,    79,    80,    82,    83,    86,    87,    88,    89,
+      90,    91,    92,    95,    96,    97,    98,    99,   100,   101,
+     102,   106,   113,   120,   127,   134,   151,   168,   178,   188,
+     189,   190,   191,   194,   211,   228,   238,   248,   249,   250,
+     251,   254,   276,   299,   313,   336,   357,   371,   395,   400,
+     405,   421,   425,   428,   431,   434,   442,   446,   450,   454,
+     458,   462,   466,   478,   486,   497,   501,   508,   533,   551,
+     569,   572,   573,   575,   578,   579,   592,   594,   596,   598,
+     599,   600,   601,   602,   603,   606,   609,   611,   612,   613,
+     614,   617,   618,   619,   620,   621,   622,   623,   624,   627,
+     630,   630,   632,   633,   634,   635,   636,   639,   640,   641,
+     642,   643,   644
 };
 #endif
 
@@ -1689,75 +1688,87 @@ yyreduce:
         case 2:
 
 /* Line 1455 of yacc.c  */
-#line 80 "yacc.y"
+#line 79 "yacc.y"
     {printf("program: program statements\n\n");;}
     break;
 
   case 3:
 
 /* Line 1455 of yacc.c  */
-#line 81 "yacc.y"
+#line 80 "yacc.y"
     {printf("program: Epsilon\n\n");;}
     break;
 
   case 8:
 
 /* Line 1455 of yacc.c  */
-#line 89 "yacc.y"
+#line 88 "yacc.y"
     {printf("statement: expr()\n");;}
     break;
 
   case 12:
 
 /* Line 1455 of yacc.c  */
-#line 93 "yacc.y"
+#line 92 "yacc.y"
     {printf("statement: IF()\n");;}
     break;
 
   case 21:
 
 /* Line 1455 of yacc.c  */
-#line 107 "yacc.y"
+#line 106 "yacc.y"
     {
                                                         char* res = InserNewElementInitial(0,0,(yyvsp[(2) - (2)].varinfo).lexeme,scopeId);
-                                                        yyerror(res);
+                                                        if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                        }
                                                     ;}
     break;
 
   case 22:
 
 /* Line 1455 of yacc.c  */
-#line 111 "yacc.y"
+#line 113 "yacc.y"
     {
                                                         char* res = InserNewElementInitial(1,0,(yyvsp[(2) - (2)].varinfo).lexeme,scopeId);
-                                                        yyerror(res);
+                                                        if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                        }
                                                     ;}
     break;
 
   case 23:
 
 /* Line 1455 of yacc.c  */
-#line 115 "yacc.y"
+#line 120 "yacc.y"
     {
                                                         char* res = InserNewElementInitial(3,0,(yyvsp[(2) - (2)].varinfo).lexeme,scopeId);
-                                                        yyerror(res);
+                                                        if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                        }
                                                     ;}
     break;
 
   case 24:
 
 /* Line 1455 of yacc.c  */
-#line 119 "yacc.y"
+#line 127 "yacc.y"
     {
                                                         char* res = InserNewElementInitial(2,0,(yyvsp[(2) - (2)].varinfo).lexeme,scopeId);
-                                                        yyerror(res);
+                                                        if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                        }
                                                     ;}
     break;
 
   case 25:
 
 /* Line 1455 of yacc.c  */
-#line 123 "yacc.y"
+#line 134 "yacc.y"
     {
                                                         //check math_expr type
                                                         if((yyvsp[(4) - (4)].mathinfo).typeId != 0 && (yyvsp[(4) - (4)].mathinfo).typeId != 1)
@@ -1780,7 +1791,7 @@ yyreduce:
   case 26:
 
 /* Line 1455 of yacc.c  */
-#line 140 "yacc.y"
+#line 151 "yacc.y"
     {
                                                         //check math_expr type
                                                         if((yyvsp[(4) - (4)].mathinfo).typeId != 0 && (yyvsp[(4) - (4)].mathinfo).typeId != 1)
@@ -1803,7 +1814,7 @@ yyreduce:
   case 27:
 
 /* Line 1455 of yacc.c  */
-#line 157 "yacc.y"
+#line 168 "yacc.y"
     {
                                                         char  cval[1];
                                                         sprintf(cval, "%d", (yyvsp[(4) - (4)].logicinfo).bval);
@@ -1819,7 +1830,7 @@ yyreduce:
   case 28:
 
 /* Line 1455 of yacc.c  */
-#line 167 "yacc.y"
+#line 178 "yacc.y"
     {
                                                         char  cval[1];
                                                         cval[0] = (yyvsp[(4) - (4)].charVal);
@@ -1835,7 +1846,7 @@ yyreduce:
   case 33:
 
 /* Line 1455 of yacc.c  */
-#line 183 "yacc.y"
+#line 194 "yacc.y"
     {
                                                         //check math_expr type
                                                         if((yyvsp[(5) - (5)].mathinfo).typeId != 0 && (yyvsp[(5) - (5)].mathinfo).typeId != 1)
@@ -1858,7 +1869,7 @@ yyreduce:
   case 34:
 
 /* Line 1455 of yacc.c  */
-#line 200 "yacc.y"
+#line 211 "yacc.y"
     {
                                                         //check math_expr type
                                                         if((yyvsp[(5) - (5)].mathinfo).typeId != 0 && (yyvsp[(5) - (5)].mathinfo).typeId != 1)
@@ -1881,11 +1892,11 @@ yyreduce:
   case 35:
 
 /* Line 1455 of yacc.c  */
-#line 217 "yacc.y"
+#line 228 "yacc.y"
     {
                                                         char  cval[1];
                                                         sprintf(cval, "%d", (yyvsp[(5) - (5)].logicinfo).bval);
-                                                        char* res = InserNewElement(3,0,(yyvsp[(3) - (5)].varinfo).lexeme,scopeId,cval);
+                                                        char* res = InserNewElement(3,1,(yyvsp[(3) - (5)].varinfo).lexeme,scopeId,cval);
                                                         if(strcmp (res, (char *)"1") != 0)
                                                         {
                                                             yyerror(res);
@@ -1897,7 +1908,7 @@ yyreduce:
   case 36:
 
 /* Line 1455 of yacc.c  */
-#line 227 "yacc.y"
+#line 238 "yacc.y"
     {
                                                         char  cval[1];
                                                         cval[0] = (yyvsp[(5) - (5)].charVal);
@@ -1913,12 +1924,12 @@ yyreduce:
   case 41:
 
 /* Line 1455 of yacc.c  */
-#line 243 "yacc.y"
+#line 254 "yacc.y"
     {   
                                         //check if the type of the expression is the same as the type of the variable
                                         if((yyvsp[(1) - (3)].mathinfo).typeId != (yyvsp[(3) - (3)].mathinfo).typeId)
                                             {
-                                                printf("WARNING: Type mismatch would cause up casting\n");
+                                                yyerror("WARNING: Type mismatch would cause up casting\n");
                                                 (yyval.mathinfo).typeId = 1;
                                                 if((yyvsp[(1) - (3)].mathinfo).typeId == 1) (yyval.mathinfo).fval = (yyvsp[(1) - (3)].mathinfo).fval + (yyvsp[(3) - (3)].mathinfo).ival;
                                                 else (yyval.mathinfo).fval = (yyvsp[(1) - (3)].mathinfo).ival + (yyvsp[(3) - (3)].mathinfo).fval;
@@ -1941,12 +1952,12 @@ yyreduce:
   case 42:
 
 /* Line 1455 of yacc.c  */
-#line 265 "yacc.y"
+#line 276 "yacc.y"
     {   
                                         //check if the type of the expression is the same as the type of the variable
                                         if((yyvsp[(1) - (3)].mathinfo).typeId != (yyvsp[(3) - (3)].mathinfo).typeId)
                                             {
-                                                printf("WARNING: Type mismatch would cause up casting\n");
+                                                yyerror("WARNING: Type mismatch would cause up casting\n");
                                                 (yyval.mathinfo).typeId = 1;
                                                 if((yyvsp[(1) - (3)].mathinfo).typeId == 1) (yyval.mathinfo).fval = (yyvsp[(1) - (3)].mathinfo).fval - (yyvsp[(3) - (3)].mathinfo).ival;
                                                 else (yyval.mathinfo).fval = (yyvsp[(1) - (3)].mathinfo).ival - (yyvsp[(3) - (3)].mathinfo).fval;
@@ -1970,7 +1981,7 @@ yyreduce:
   case 43:
 
 /* Line 1455 of yacc.c  */
-#line 288 "yacc.y"
+#line 299 "yacc.y"
     { 
                                         (yyval.mathinfo).typeId = (yyvsp[(1) - (1)].mathinfo).typeId;
                                         if((yyvsp[(1) - (1)].mathinfo).typeId == 0)
@@ -1988,12 +1999,12 @@ yyreduce:
   case 44:
 
 /* Line 1455 of yacc.c  */
-#line 302 "yacc.y"
+#line 313 "yacc.y"
     { 
                                         //check if the type of the expression is the same as the type of the variable
                                         if((yyvsp[(1) - (3)].mathinfo).typeId != (yyvsp[(3) - (3)].mathinfo).typeId)
                                             {
-                                                printf("WARNING: Type mismatch would cause up casting\n");
+                                                yyerror("WARNING: Type mismatch would cause up casting\n");
                                                 (yyval.mathinfo).typeId = 1;
                                                 if((yyvsp[(1) - (3)].mathinfo).typeId == 1) (yyval.mathinfo).fval = (yyvsp[(1) - (3)].mathinfo).fval * (yyvsp[(3) - (3)].mathinfo).ival;
                                                 else (yyval.mathinfo).fval = (yyvsp[(1) - (3)].mathinfo).ival * (yyvsp[(3) - (3)].mathinfo).fval;
@@ -2017,12 +2028,12 @@ yyreduce:
   case 45:
 
 /* Line 1455 of yacc.c  */
-#line 325 "yacc.y"
+#line 336 "yacc.y"
     {
                                         //check if the type of the expression is the same as the type of the variable
                                         if((yyvsp[(1) - (3)].mathinfo).typeId != (yyvsp[(3) - (3)].mathinfo).typeId)
                                             {
-                                                printf("WARNING: Type mismatch would cause up casting\n");
+                                                yyerror("WARNING: Type mismatch would cause up casting\n");
                                                 (yyval.mathinfo).typeId = 1;
                                                 if((yyvsp[(1) - (3)].mathinfo).typeId == 1) (yyval.mathinfo).fval = (yyvsp[(1) - (3)].mathinfo).fval / (yyvsp[(3) - (3)].mathinfo).ival;
                                                 else (yyval.mathinfo).fval = (yyvsp[(1) - (3)].mathinfo).ival / (yyvsp[(3) - (3)].mathinfo).fval;
@@ -2044,7 +2055,7 @@ yyreduce:
   case 46:
 
 /* Line 1455 of yacc.c  */
-#line 346 "yacc.y"
+#line 357 "yacc.y"
     { 
                                         (yyval.mathinfo).typeId = (yyvsp[(1) - (1)].mathinfo).typeId;
                                         if((yyvsp[(1) - (1)].mathinfo).typeId == 0)
@@ -2062,16 +2073,16 @@ yyreduce:
   case 47:
 
 /* Line 1455 of yacc.c  */
-#line 360 "yacc.y"
+#line 371 "yacc.y"
     {   
                                         //check if the variable is defined in the symbol table
                                         int type, isconst, isset;
                                         if(strcmp (GetInfo((yyvsp[(1) - (1)].varinfo).lexeme,scopeId,&type,&isconst,&isset), (char*)"1") != 0)
-                                        {   printf("VAR %s :not declared scopeId:%d",(yyvsp[(1) - (1)].varinfo).lexeme,scopeId);
-                                            exit(0);
+                                        {   char var[4] = "VAR "; char ms[30] = " :not declared";
+                                            yyerror(strcat(var,strcat((yyvsp[(1) - (1)].varinfo).lexeme,ms)));
                                         }else if(isset != 1){
-                                            printf("VAR %s :not initialized scopeId:%d",(yyvsp[(1) - (1)].varinfo).lexeme,scopeId);
-                                            exit(0);
+                                            char var[4] = "VAR "; char ms[30] = " :not initialized";
+                                            yyerror(strcat(var,strcat((yyvsp[(1) - (1)].varinfo).lexeme,ms)));
                                         }
                                         else if (type != 2 ){//not char
                                             (yyval.mathinfo).typeId = type;
@@ -2092,7 +2103,7 @@ yyreduce:
   case 48:
 
 /* Line 1455 of yacc.c  */
-#line 384 "yacc.y"
+#line 395 "yacc.y"
     { 
                                         (yyval.mathinfo).typeId = 0; // int type
                                         (yyval.mathinfo).ival = (yyvsp[(1) - (1)].intVal);
@@ -2103,7 +2114,7 @@ yyreduce:
   case 49:
 
 /* Line 1455 of yacc.c  */
-#line 389 "yacc.y"
+#line 400 "yacc.y"
     {
                                         (yyval.mathinfo).typeId = 1; // float type
                                         (yyval.mathinfo).fval = (yyvsp[(1) - (1)].floatVal); // float type
@@ -2114,7 +2125,7 @@ yyreduce:
   case 50:
 
 /* Line 1455 of yacc.c  */
-#line 394 "yacc.y"
+#line 405 "yacc.y"
     {
                                         (yyval.mathinfo).typeId = (yyvsp[(2) - (3)].mathinfo).typeId;
                                         if((yyvsp[(2) - (3)].mathinfo).typeId == 0)
@@ -2132,7 +2143,7 @@ yyreduce:
   case 51:
 
 /* Line 1455 of yacc.c  */
-#line 410 "yacc.y"
+#line 421 "yacc.y"
     {
                                                         (yyval.logicinfo).bval = (yyvsp[(2) - (3)].logicinfo).bval;
                                                         printf("(logic_expr) => %s\n", (yyval.logicinfo).bval ? "true" : "false");
@@ -2142,7 +2153,7 @@ yyreduce:
   case 52:
 
 /* Line 1455 of yacc.c  */
-#line 414 "yacc.y"
+#line 425 "yacc.y"
     {
                                                         (yyval.logicinfo).bval = (yyvsp[(1) - (3)].logicinfo).bval || (yyvsp[(3) - (3)].logicinfo).bval; 
                                                     ;}
@@ -2151,7 +2162,7 @@ yyreduce:
   case 53:
 
 /* Line 1455 of yacc.c  */
-#line 417 "yacc.y"
+#line 428 "yacc.y"
     { 
                                                         (yyval.logicinfo).bval = (yyvsp[(1) - (3)].logicinfo).bval && (yyvsp[(3) - (3)].logicinfo).bval;
                                                     ;}
@@ -2160,7 +2171,7 @@ yyreduce:
   case 54:
 
 /* Line 1455 of yacc.c  */
-#line 420 "yacc.y"
+#line 431 "yacc.y"
     {
                                                         (yyval.logicinfo).bval = !(yyvsp[(2) - (2)].logicinfo).bval;
                                                     ;}
@@ -2169,7 +2180,7 @@ yyreduce:
   case 55:
 
 /* Line 1455 of yacc.c  */
-#line 423 "yacc.y"
+#line 434 "yacc.y"
     {
                                                         int type,isconst;
                                                         DecAndInit((yyvsp[(2) - (2)].varinfo).lexeme,scopeId,&type,&isconst);
@@ -2183,7 +2194,7 @@ yyreduce:
   case 56:
 
 /* Line 1455 of yacc.c  */
-#line 431 "yacc.y"
+#line 442 "yacc.y"
     { 
                                                         (yyval.logicinfo).bval = (((yyvsp[(1) - (3)].mathinfo).typeId == 0) ? (yyvsp[(1) - (3)].mathinfo).ival :(yyvsp[(1) - (3)].mathinfo).fval) >= (((yyvsp[(3) - (3)].mathinfo).typeId == 0) ? (yyvsp[(3) - (3)].mathinfo).ival :(yyvsp[(3) - (3)].mathinfo).fval);
                                                         printf("statement >= statement\n")
@@ -2193,7 +2204,7 @@ yyreduce:
   case 57:
 
 /* Line 1455 of yacc.c  */
-#line 435 "yacc.y"
+#line 446 "yacc.y"
     {   
                                                         (yyval.logicinfo).bval = (((yyvsp[(1) - (3)].mathinfo).typeId == 0) ? (yyvsp[(1) - (3)].mathinfo).ival :(yyvsp[(1) - (3)].mathinfo).fval) > (((yyvsp[(3) - (3)].mathinfo).typeId == 0) ? (yyvsp[(3) - (3)].mathinfo).ival :(yyvsp[(3) - (3)].mathinfo).fval);
                                                         printf("statement > statement\n")
@@ -2203,7 +2214,7 @@ yyreduce:
   case 58:
 
 /* Line 1455 of yacc.c  */
-#line 439 "yacc.y"
+#line 450 "yacc.y"
     {   
                                                         (yyval.logicinfo).bval = (((yyvsp[(1) - (3)].mathinfo).typeId == 0) ? (yyvsp[(1) - (3)].mathinfo).ival :(yyvsp[(1) - (3)].mathinfo).fval) == (((yyvsp[(3) - (3)].mathinfo).typeId == 0) ? (yyvsp[(3) - (3)].mathinfo).ival :(yyvsp[(3) - (3)].mathinfo).fval);
                                                         printf("statement == statement\n")
@@ -2213,7 +2224,7 @@ yyreduce:
   case 59:
 
 /* Line 1455 of yacc.c  */
-#line 443 "yacc.y"
+#line 454 "yacc.y"
     {   
                                                         (yyval.logicinfo).bval = (((yyvsp[(1) - (3)].mathinfo).typeId == 0) ? (yyvsp[(1) - (3)].mathinfo).ival :(yyvsp[(1) - (3)].mathinfo).fval) <= (((yyvsp[(3) - (3)].mathinfo).typeId == 0) ? (yyvsp[(3) - (3)].mathinfo).ival :(yyvsp[(3) - (3)].mathinfo).fval);
                                                         printf("statement <= statement\n")
@@ -2223,7 +2234,7 @@ yyreduce:
   case 60:
 
 /* Line 1455 of yacc.c  */
-#line 447 "yacc.y"
+#line 458 "yacc.y"
     {
                                                         (yyval.logicinfo).bval = (((yyvsp[(1) - (3)].mathinfo).typeId == 0) ? (yyvsp[(1) - (3)].mathinfo).ival :(yyvsp[(1) - (3)].mathinfo).fval) < (((yyvsp[(3) - (3)].mathinfo).typeId == 0) ? (yyvsp[(3) - (3)].mathinfo).ival :(yyvsp[(3) - (3)].mathinfo).fval);   
                                                         printf("statement < statement\n")
@@ -2233,7 +2244,7 @@ yyreduce:
   case 61:
 
 /* Line 1455 of yacc.c  */
-#line 451 "yacc.y"
+#line 462 "yacc.y"
     {  
                                                         (yyval.logicinfo).bval = (((yyvsp[(1) - (3)].mathinfo).typeId == 0) ? (yyvsp[(1) - (3)].mathinfo).ival :(yyvsp[(1) - (3)].mathinfo).fval) != (((yyvsp[(3) - (3)].mathinfo).typeId == 0) ? (yyvsp[(3) - (3)].mathinfo).ival :(yyvsp[(3) - (3)].mathinfo).fval); 
                                                         printf("statement != statement\n")
@@ -2243,7 +2254,7 @@ yyreduce:
   case 62:
 
 /* Line 1455 of yacc.c  */
-#line 455 "yacc.y"
+#line 466 "yacc.y"
     {
                                                         int type,isconst;
                                                         DecAndInit((yyvsp[(1) - (3)].varinfo).lexeme,scopeId,&type,&isconst);
@@ -2255,14 +2266,13 @@ yyreduce:
                                                                 (yyval.logicinfo).bval = 0;
                                                         }else   
                                                             yyerror("Type mismatch logic_expr");   
-                                                        
                                                     ;}
     break;
 
   case 63:
 
 /* Line 1455 of yacc.c  */
-#line 468 "yacc.y"
+#line 478 "yacc.y"
     {
                                                         int type,isconst;
                                                         DecAndInit((yyvsp[(1) - (3)].varinfo).lexeme,scopeId,&type,&isconst);
@@ -2276,7 +2286,7 @@ yyreduce:
   case 64:
 
 /* Line 1455 of yacc.c  */
-#line 476 "yacc.y"
+#line 486 "yacc.y"
     {
                                                         int type,isconst;
                                                         DecAndInit((yyvsp[(1) - (3)].varinfo).lexeme,scopeId,&type,&isconst);
@@ -2293,7 +2303,7 @@ yyreduce:
   case 65:
 
 /* Line 1455 of yacc.c  */
-#line 487 "yacc.y"
+#line 497 "yacc.y"
     { 
                                                         (yyval.logicinfo).bval = 1;
                                                         printf("%s\n", (yyval.logicinfo).bval ? "true" : "false");
@@ -2303,7 +2313,7 @@ yyreduce:
   case 66:
 
 /* Line 1455 of yacc.c  */
-#line 491 "yacc.y"
+#line 501 "yacc.y"
     {   
                                                         (yyval.logicinfo).bval = 0;
                                                         printf("%s\n", (yyval.logicinfo).bval ? "true" : "false");
@@ -2313,7 +2323,7 @@ yyreduce:
   case 67:
 
 /* Line 1455 of yacc.c  */
-#line 498 "yacc.y"
+#line 508 "yacc.y"
     {
                                                         int type, isconst, isset;
                                                         if(strcmp (GetInfo((yyvsp[(1) - (3)].varinfo).lexeme,scopeId,&type,&isconst,&isset), (char*)"1") != 0)
@@ -2344,7 +2354,7 @@ yyreduce:
   case 68:
 
 /* Line 1455 of yacc.c  */
-#line 523 "yacc.y"
+#line 533 "yacc.y"
     {
                                                      int type, isconst, isset;
                                                     if(strcmp (GetInfo((yyvsp[(1) - (3)].varinfo).lexeme,scopeId,&type,&isconst,&isset), (char*)"1") != 0)
@@ -2368,7 +2378,7 @@ yyreduce:
   case 69:
 
 /* Line 1455 of yacc.c  */
-#line 541 "yacc.y"
+#line 551 "yacc.y"
     {
                                                     int type, isconst, isset;
                                                     if(strcmp (GetInfo((yyvsp[(1) - (3)].varinfo).lexeme,scopeId,&type,&isconst,&isset), (char*)"1") != 0)
@@ -2392,140 +2402,140 @@ yyreduce:
   case 70:
 
 /* Line 1455 of yacc.c  */
-#line 559 "yacc.y"
+#line 569 "yacc.y"
     {printf("assignment: VAR = Function call\n");;}
     break;
 
   case 71:
 
 /* Line 1455 of yacc.c  */
-#line 562 "yacc.y"
+#line 572 "yacc.y"
     {scopeId++; NewLevel();;}
     break;
 
   case 72:
 
 /* Line 1455 of yacc.c  */
-#line 563 "yacc.y"
+#line 573 "yacc.y"
     {scopeId--; removeLevel();;}
     break;
 
   case 73:
 
 /* Line 1455 of yacc.c  */
-#line 565 "yacc.y"
+#line 575 "yacc.y"
     {printf("this is a scope\n");}
     break;
 
   case 74:
 
 /* Line 1455 of yacc.c  */
-#line 568 "yacc.y"
+#line 578 "yacc.y"
     {printf("if-then");}
     break;
 
   case 75:
 
 /* Line 1455 of yacc.c  */
-#line 569 "yacc.y"
+#line 579 "yacc.y"
     {printf("if-else");}
     break;
 
   case 99:
 
 /* Line 1455 of yacc.c  */
-#line 617 "yacc.y"
+#line 627 "yacc.y"
     {printf("function_call \n");;}
     break;
 
   case 101:
 
 /* Line 1455 of yacc.c  */
-#line 620 "yacc.y"
+#line 630 "yacc.y"
     {printf("call parameters\n");;}
     break;
 
   case 102:
 
 /* Line 1455 of yacc.c  */
-#line 622 "yacc.y"
+#line 632 "yacc.y"
     {printf("Data Var \n");;}
     break;
 
   case 103:
 
 /* Line 1455 of yacc.c  */
-#line 623 "yacc.y"
+#line 633 "yacc.y"
     {printf("Data int \n");;}
     break;
 
   case 104:
 
 /* Line 1455 of yacc.c  */
-#line 624 "yacc.y"
+#line 634 "yacc.y"
     {printf("Data floa \nt");;}
     break;
 
   case 105:
 
 /* Line 1455 of yacc.c  */
-#line 625 "yacc.y"
+#line 635 "yacc.y"
     {printf("Data char \n");;}
     break;
 
   case 106:
 
 /* Line 1455 of yacc.c  */
-#line 626 "yacc.y"
+#line 636 "yacc.y"
     {printf("Data bool \n");;}
     break;
 
   case 107:
 
 /* Line 1455 of yacc.c  */
-#line 629 "yacc.y"
+#line 639 "yacc.y"
     {printf("return Var \n");;}
     break;
 
   case 108:
 
 /* Line 1455 of yacc.c  */
-#line 630 "yacc.y"
+#line 640 "yacc.y"
     {printf("return int \n");;}
     break;
 
   case 109:
 
 /* Line 1455 of yacc.c  */
-#line 631 "yacc.y"
+#line 641 "yacc.y"
     {printf("return float \n");;}
     break;
 
   case 110:
 
 /* Line 1455 of yacc.c  */
-#line 632 "yacc.y"
+#line 642 "yacc.y"
     {printf("return char \n");;}
     break;
 
   case 111:
 
 /* Line 1455 of yacc.c  */
-#line 633 "yacc.y"
+#line 643 "yacc.y"
     {printf("return bool \n");;}
     break;
 
   case 112:
 
 /* Line 1455 of yacc.c  */
-#line 634 "yacc.y"
+#line 644 "yacc.y"
     {printf("return \n");;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 2529 "yacc.tab.c"
+#line 2539 "yacc.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2737,66 +2747,15 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 637 "yacc.y"
+#line 647 "yacc.y"
 
 
 int main (void) {
     
     NewLevel();
-
-    /*PrintFunc(1000);
-    NewLevel();
-    printf("%d\n",InserNewElement(0,0,"x",0,"5"));
-    
-    int type;
-    int isconst;
-    int isset;
-
-    GetInfo("x",0,&type,&isconst,&isset);
-
-    printf("%d\n",type);
-    printf("%d\n",isconst);
-    printf("%d\n",isset);
-    printf("%d\n",GetIntVal("x",0));
-    printf("%d\n",UpdateVal(0,"x",0,"6"));
-    printf("%d\n",GetIntVal("x",0));
-
-    printf("%d\n",InserNewElement(1,0,"y",0,"5.3"));
-    printf("%f\n",GetFloatVal("y",0));
-    printf("%d\n",UpdateVal(1,"y",0,"6.7"));
-    printf("%f\n",GetFloatVal("y",0));
-
-    printf("%d\n",InserNewElement(2,0,"z",0,"a"));
-    printf("%c\n",GetCharVal("z",0));
-    printf("%d\n",UpdateVal(2,"z",0,"b"));
-    printf("%c\n",GetCharVal("z",0));
-
-    printf("%d\n",InserNewElement(3,0,"m",0,"1"));
-    printf("%d\n",GetBoolVal("m",0));
-    printf("%d\n",UpdateVal(3,"m",0,"0"));
-    printf("%d\n",GetBoolVal("m",0));*/
-
-
-    /*PrintFunc(1000);
-    NewLevel();*
-
-    /*printf("declared new varable %d\n",InsertNewIntElement(0,0,"y",0,0));
-    printf("declared new varable %d\n",InsertNewIntElement(0,0,"y",0,0));
-    printf("declared new varable %d\n",InsertNewIntElement(0,0,"y",0,0));
-    printf("declared new varable %d\n",InsertNewIntElement(0,0,"y",0,0));
-    printf("declared new varable %d\n",InsertNewIntElement(0,0,"x",0,0));
-    printf("declared new varable %d\n",InsertNewIntElement(0,0,"x",0,0));*/
-
-    /*printf("%d\n",InsertNewIntElement(0,0,"x",0,5));
-    printf("%d\n",InsertNewIntElement(0,0,"x",0,6));
-    printf("%d\n",UpdateIntVal(0,0,"x",0,6));
-    NewLevel();
-    printf("%d\n",InsertNewIntElement(0,0,"x",1,5));
-    printf("%d\n",InsertNewIntElement(0,0,"x",1,5));
-    removeLevel();
-    printf("%d\n",InsertNewIntElement(0,0,"x",0,5));
-    removeLevel();*/
-
+    FILE* ftrans = fopen("transcript.txt","w");
+    fprintf(ftrans,"------------- transcript ----------\n");
+    fclose(ftrans);
     /*yyin = fopen("testfile.txt","r+");
     if(yyin ==NULL){
         printf("File Not Found\n");
@@ -2808,5 +2767,6 @@ int main (void) {
     }
     fclose(yyin);*/
     yyparse();
+    removeLevel();
     return 0;
 }

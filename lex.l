@@ -1,3 +1,5 @@
+%option yylineno
+
 %{
     #include <stdio.h>
     #include <stdlib.h>
@@ -70,8 +72,15 @@
 .                               yyerror("Unknown Token");
 %%
 
-void yyerror(char *s) { 
-    printf("%s\n", s); 
+void yyerror(char *s) {
+    printf("line %d : %s \n", yylineno, s);
+    FILE* fptr = fopen("transcript.txt","ab");
+    if(fptr == NULL)
+   {
+      printf("Error opining transcript.txt in lexxer!");   
+   }
+    fprintf(fptr,"line %d : %s \n", yylineno, s);
+    fclose(fptr);
 }
 
 int yywrap(void){

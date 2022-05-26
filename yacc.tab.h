@@ -95,7 +95,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 29 "yacc.y"
+#line 28 "yacc.y"
 
     int intVal;    
     char charVal;               

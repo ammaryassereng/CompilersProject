@@ -23,7 +23,6 @@
             exit(0);
         }
     }
-
 %}
 
 %union {
@@ -106,19 +105,31 @@ statement : var_declaration END_EXPR
 
 var_declaration : INT VAR                           {
                                                         char* res = InserNewElementInitial(0,0,$2.lexeme,scopeId);
-                                                        yyerror(res);
+                                                        if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                        }
                                                     }
                 | FLOAT VAR                         {
                                                         char* res = InserNewElementInitial(1,0,$2.lexeme,scopeId);
-                                                        yyerror(res);
+                                                        if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                        }
                                                     }
                 | BOOL VAR                          {
                                                         char* res = InserNewElementInitial(3,0,$2.lexeme,scopeId);
-                                                        yyerror(res);
+                                                        if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                        }
                                                     } 
                 | CHAR VAR                          {
                                                         char* res = InserNewElementInitial(2,0,$2.lexeme,scopeId);
-                                                        yyerror(res);
+                                                        if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                        }
                                                     }
                 | INT VAR EQUAL math_expr           {
                                                         //check math_expr type
@@ -217,7 +228,7 @@ const_declaration : CONST INT VAR EQUAL math_expr  {
                   | CONST BOOL VAR EQUAL logic_expr     {
                                                         char  cval[1];
                                                         sprintf(cval, "%d", $5.bval);
-                                                        char* res = InserNewElement(3,0,$3.lexeme,scopeId,cval);
+                                                        char* res = InserNewElement(3,1,$3.lexeme,scopeId,cval);
                                                         if(strcmp (res, (char *)"1") != 0)
                                                         {
                                                             yyerror(res);
@@ -244,7 +255,7 @@ math_expr: math_expr PLUS term      {
                                         //check if the type of the expression is the same as the type of the variable
                                         if($1.typeId != $3.typeId)
                                             {
-                                                printf("WARNING: Type mismatch would cause up casting\n");
+                                                yyerror("WARNING: Type mismatch would cause up casting\n");
                                                 $$.typeId = 1;
                                                 if($1.typeId == 1) $$.fval = $1.fval + $3.ival;
                                                 else $$.fval = $1.ival + $3.fval;
@@ -266,7 +277,7 @@ math_expr: math_expr PLUS term      {
                                         //check if the type of the expression is the same as the type of the variable
                                         if($1.typeId != $3.typeId)
                                             {
-                                                printf("WARNING: Type mismatch would cause up casting\n");
+                                                yyerror("WARNING: Type mismatch would cause up casting\n");
                                                 $$.typeId = 1;
                                                 if($1.typeId == 1) $$.fval = $1.fval - $3.ival;
                                                 else $$.fval = $1.ival - $3.fval;
@@ -303,7 +314,7 @@ term: term MULTIPLY factor          {
                                         //check if the type of the expression is the same as the type of the variable
                                         if($1.typeId != $3.typeId)
                                             {
-                                                printf("WARNING: Type mismatch would cause up casting\n");
+                                                yyerror("WARNING: Type mismatch would cause up casting\n");
                                                 $$.typeId = 1;
                                                 if($1.typeId == 1) $$.fval = $1.fval * $3.ival;
                                                 else $$.fval = $1.ival * $3.fval;
@@ -326,7 +337,7 @@ term: term MULTIPLY factor          {
                                         //check if the type of the expression is the same as the type of the variable
                                         if($1.typeId != $3.typeId)
                                             {
-                                                printf("WARNING: Type mismatch would cause up casting\n");
+                                                yyerror("WARNING: Type mismatch would cause up casting\n");
                                                 $$.typeId = 1;
                                                 if($1.typeId == 1) $$.fval = $1.fval / $3.ival;
                                                 else $$.fval = $1.ival / $3.fval;
@@ -361,11 +372,11 @@ factor: VAR                         {
                                         //check if the variable is defined in the symbol table
                                         int type, isconst, isset;
                                         if(strcmp (GetInfo($1.lexeme,scopeId,&type,&isconst,&isset), (char*)"1") != 0)
-                                        {   printf("VAR %s :not declared scopeId:%d",$1.lexeme,scopeId);
-                                            exit(0);
+                                        {   char var[4] = "VAR "; char ms[30] = " :not declared";
+                                            yyerror(strcat(var,strcat($1.lexeme,ms)));
                                         }else if(isset != 1){
-                                            printf("VAR %s :not initialized scopeId:%d",$1.lexeme,scopeId);
-                                            exit(0);
+                                            char var[4] = "VAR "; char ms[30] = " :not initialized";
+                                            yyerror(strcat(var,strcat($1.lexeme,ms)));
                                         }
                                         else if (type != 2 ){//not char
                                             $$.typeId = type;
@@ -438,19 +449,15 @@ logic_expr:'(' logic_expr ')'                       {
                                                     }
           |math_expr EqualEqual math_expr           {   
                                                         $$.bval = (($1.typeId == 0) ? $1.ival :$1.fval) == (($3.typeId == 0) ? $3.ival :$3.fval);
-                                                        printf("statement == statement\n")
                                                     }
           |math_expr LessThanOrEqual math_expr      {   
                                                         $$.bval = (($1.typeId == 0) ? $1.ival :$1.fval) <= (($3.typeId == 0) ? $3.ival :$3.fval);
-                                                        printf("statement <= statement\n")
                                                     }
           |math_expr LessThan math_expr             {
                                                         $$.bval = (($1.typeId == 0) ? $1.ival :$1.fval) < (($3.typeId == 0) ? $3.ival :$3.fval);   
-                                                        printf("statement < statement\n")
                                                     }
           |math_expr NotEqual math_expr             {  
                                                         $$.bval = (($1.typeId == 0) ? $1.ival :$1.fval) != (($3.typeId == 0) ? $3.ival :$3.fval); 
-                                                        printf("statement != statement\n")
                                                     }
           |VAR IS TRUE                              {
                                                         int type,isconst;
@@ -463,7 +470,6 @@ logic_expr:'(' logic_expr ')'                       {
                                                                 $$.bval = 0;
                                                         }else   
                                                             yyerror("Type mismatch logic_expr");   
-                                                        
                                                     }
           |VAR IS FALSE                             {
                                                         int type,isconst;
@@ -486,11 +492,9 @@ logic_expr:'(' logic_expr ')'                       {
                                                     }
           |TRUE                                     { 
                                                         $$.bval = 1;
-                                                        printf("%s\n", $$.bval ? "true" : "false");
                                                     }
           |FALSE                                    {   
                                                         $$.bval = 0;
-                                                        printf("%s\n", $$.bval ? "true" : "false");
                                                     }
           ;
    
@@ -516,7 +520,6 @@ assignment: VAR EQUAL math_expr                     {
                                                     if(strcmp (res, (char *)"1") != 0)
                                                         {
                                                             yyerror(res);
-                                                            exit(0);
                                                         }
                                                     printf("assignment: VAR = math_expr\n");
                                                     }
@@ -639,60 +642,9 @@ RETURN_STATEMENT: RETURN VAR            {printf("return Var \n");}
 int main (void) {
     
     NewLevel();
-
-    /*PrintFunc(1000);
-    NewLevel();
-    printf("%d\n",InserNewElement(0,0,"x",0,"5"));
-    
-    int type;
-    int isconst;
-    int isset;
-
-    GetInfo("x",0,&type,&isconst,&isset);
-
-    printf("%d\n",type);
-    printf("%d\n",isconst);
-    printf("%d\n",isset);
-    printf("%d\n",GetIntVal("x",0));
-    printf("%d\n",UpdateVal(0,"x",0,"6"));
-    printf("%d\n",GetIntVal("x",0));
-
-    printf("%d\n",InserNewElement(1,0,"y",0,"5.3"));
-    printf("%f\n",GetFloatVal("y",0));
-    printf("%d\n",UpdateVal(1,"y",0,"6.7"));
-    printf("%f\n",GetFloatVal("y",0));
-
-    printf("%d\n",InserNewElement(2,0,"z",0,"a"));
-    printf("%c\n",GetCharVal("z",0));
-    printf("%d\n",UpdateVal(2,"z",0,"b"));
-    printf("%c\n",GetCharVal("z",0));
-
-    printf("%d\n",InserNewElement(3,0,"m",0,"1"));
-    printf("%d\n",GetBoolVal("m",0));
-    printf("%d\n",UpdateVal(3,"m",0,"0"));
-    printf("%d\n",GetBoolVal("m",0));*/
-
-
-    /*PrintFunc(1000);
-    NewLevel();*
-
-    /*printf("declared new varable %d\n",InsertNewIntElement(0,0,"y",0,0));
-    printf("declared new varable %d\n",InsertNewIntElement(0,0,"y",0,0));
-    printf("declared new varable %d\n",InsertNewIntElement(0,0,"y",0,0));
-    printf("declared new varable %d\n",InsertNewIntElement(0,0,"y",0,0));
-    printf("declared new varable %d\n",InsertNewIntElement(0,0,"x",0,0));
-    printf("declared new varable %d\n",InsertNewIntElement(0,0,"x",0,0));*/
-
-    /*printf("%d\n",InsertNewIntElement(0,0,"x",0,5));
-    printf("%d\n",InsertNewIntElement(0,0,"x",0,6));
-    printf("%d\n",UpdateIntVal(0,0,"x",0,6));
-    NewLevel();
-    printf("%d\n",InsertNewIntElement(0,0,"x",1,5));
-    printf("%d\n",InsertNewIntElement(0,0,"x",1,5));
-    removeLevel();
-    printf("%d\n",InsertNewIntElement(0,0,"x",0,5));
-    removeLevel();*/
-
+    FILE* ftrans = fopen("transcript.txt","w");
+    fprintf(ftrans,"------------- transcript ----------\n");
+    fclose(ftrans);
     /*yyin = fopen("testfile.txt","r+");
     if(yyin ==NULL){
         printf("File Not Found\n");
@@ -704,5 +656,6 @@ int main (void) {
     }
     fclose(yyin);*/
     yyparse();
+    removeLevel();
     return 0;
 }
