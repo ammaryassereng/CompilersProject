@@ -95,7 +95,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 16 "yacc.y"
+#line 28 "yacc.y"
 
     int intVal;    
     char charVal;               
@@ -103,9 +103,10 @@ typedef union YYSTYPE
 	char* varName; 
 
     struct mathinfo{
-    int typeId; //0-int, 1-float, 2-char
+    int typeId; //0-int, 1-float, 2-char, 3-bool
     int ival;
     float fval;
+    int bval;
   }mathinfo;    
 
   struct logicinfo{
@@ -123,7 +124,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 127 "yacc.tab.h"
+#line 128 "yacc.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

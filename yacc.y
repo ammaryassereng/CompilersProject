@@ -10,6 +10,18 @@
     int tokenValId = 0; 
     int tokensVal [10];
 
+    int scopeId = 0;
+    
+    void DecAndInit(char* VarName, int scopeID, int* type, int* isconst)
+    {
+        if(strcmp (GetInfo($1.lexeme,scopeId,type,isconst,isset), (char*)"1") != 0)
+        {   printf("VAR %s :not declared scopeId:%d",$1.lexeme,scopeId);
+            exit(0);
+        }else if(isset != 1){
+        printf("VAR %s :not initialized scopeId:%d",$1.lexeme,scopeId);
+            exit(0);
+        }
+    }
 
 %}
 
@@ -20,9 +32,10 @@
 	char* varName; 
 
     struct mathinfo{
-    int typeId; //0-int, 1-float, 2-char
+    int typeId; //0-int, 1-float, 2-char, 3-bool
     int ival;
     float fval;
+    int bval;
   }mathinfo;    
 
   struct logicinfo{
@@ -91,38 +104,135 @@ statement : var_declaration END_EXPR
 
 
 var_declaration : INT VAR                           {
-                                                        printf("var name: %s\n" ,$2.lexeme);
-                                                        printf("declared new varable %d\n",InsertNewIntElement(0,0,$2.lexeme,0,0));
+                                                        char* res = InserNewElementInitial(0,0,$2.lexeme,scopeId);
+                                                        yyerror(res);
                                                     }
-                | FLOAT VAR 
-                | BOOL VAR 
-                | CHAR VAR 
+                | FLOAT VAR                         {
+                                                        char* res = InserNewElementInitial(1,0,$2.lexeme,scopeId);
+                                                        yyerror(res);
+                                                    }
+                | BOOL VAR                          {
+                                                        char* res = InserNewElementInitial(3,0,$2.lexeme,scopeId);
+                                                        yyerror(res);
+                                                    } 
+                | CHAR VAR                          {
+                                                        char* res = InserNewElementInitial(2,0,$2.lexeme,scopeId);
+                                                        yyerror(res);
+                                                    }
                 | INT VAR EQUAL math_expr           {
                                                         //check math_expr type
-                                                        if($4.typeId != 0)
-                                                            yyerror("ERROR: Invalid variable assignment")
-                                                        //assign value($4.ival) to var
+                                                        if($4.typeId != 0 && $4.typeId != 1)
+                                                            yyerror("ERROR: Invalid variable assignment");
+                                                        char  cval[10];
+                                                        if($4.typeId == 0)
+                                                        {
+                                                            sprintf(cval, "%d", $4.ival);
+                                                        } 
+                                                        else sprintf(cval, "%f", $4.fval);
+                                                        char* res = InserNewElement(0,0,$2.lexeme,scopeId,cval);
+                                                        if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                            exit(0);
+                                                        }
                                                     } 
                 | FLOAT VAR EQUAL math_expr         {
                                                         //check math_expr type
-                                                        if($4.typeId != 1)
-                                                            yyerror("ERROR: Invalid variable assignment")
-                                                        //assign value($4.fval) to var
-                                                    } 
+                                                        if($4.typeId != 0 && $4.typeId != 1)
+                                                            yyerror("ERROR: Invalid variable assignment type mismatch");
+                                                        char  cval[15];
+                                                        if($4.typeId == 0)
+                                                        {
+                                                            sprintf(cval, "%d", $4.ival);
+                                                        } 
+                                                        else sprintf(cval, "%f", $4.fval);
+                                                        char* res = InserNewElement(1,0,$2.lexeme,scopeId,cval);
+                                                        if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                            exit(0);
+                                                        }
+                                                    }
                 | BOOL VAR EQUAL logic_expr         {
-                                                        //assign value($4.bval) to var
-                                                    }  
-                | CHAR VAR EQUAL CHAR_VALUE
+                                                        char  cval[1];
+                                                        sprintf(cval, "%d", $4.bval);
+                                                        char* res = InserNewElement(3,0,$2.lexeme,scopeId,cval);
+                                                        if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                            exit(0);
+                                                        }
+                                                    }
+                | CHAR VAR EQUAL CHAR_VALUE         {
+                                                        char  cval[1];
+                                                        cval[0] = $4;
+                                                        char* res = InserNewElement(2,0,$2.lexeme,scopeId,cval);
+                                                        if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                            exit(0);
+                                                        }
+                                                    }
                 | INT VAR EQUAL FUNCTION_CALL 
                 | FLOAT VAR EQUAL FUNCTION_CALL
                 | BOOL VAR EQUAL FUNCTION_CALL
                 | CHAR VAR EQUAL FUNCTION_CALL
                 ;
 
-const_declaration : CONST INT VAR EQUAL math_expr 
-                  | CONST FLOAT VAR EQUAL math_expr 
-                  | CONST BOOL VAR EQUAL logic_expr 
-                  | CONST CHAR VAR EQUAL CHAR_VALUE
+const_declaration : CONST INT VAR EQUAL math_expr  {
+                                                        //check math_expr type
+                                                        if($5.typeId != 0 && $5.typeId != 1)
+                                                            yyerror("ERROR: Invalid CONST assignment");
+                                                        char  cval[10];
+                                                        if($5.typeId == 0)
+                                                        {
+                                                            sprintf(cval, "%d", $5.ival);
+                                                        } 
+                                                        else sprintf(cval, "%f", $5.fval);
+                                                        char* res = InserNewElement(0,1,$3.lexeme,scopeId,cval);
+                                                        if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                            exit(0);
+                                                        }
+                                                    } 
+                  | CONST FLOAT VAR EQUAL math_expr     {
+                                                        //check math_expr type
+                                                        if($5.typeId != 0 && $5.typeId != 1)
+                                                            yyerror("ERROR: Invalid CONST assignment");
+                                                        char  cval[10];
+                                                        if($5.typeId == 0)
+                                                        {
+                                                            sprintf(cval, "%d", $5.ival);
+                                                        } 
+                                                        else sprintf(cval, "%f", $5.fval);
+                                                        char* res = InserNewElement(1,1,$3.lexeme,scopeId,cval);
+                                                        if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                            exit(0);
+                                                        }
+                                                    } 
+                  | CONST BOOL VAR EQUAL logic_expr     {
+                                                        char  cval[1];
+                                                        sprintf(cval, "%d", $5.bval);
+                                                        char* res = InserNewElement(3,0,$3.lexeme,scopeId,cval);
+                                                        if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                            exit(0);
+                                                        }
+                                                    } 
+                  | CONST CHAR VAR EQUAL CHAR_VALUE     {
+                                                        char  cval[1];
+                                                        cval[0] = $5;
+                                                        char* res = InserNewElement(2,1,$3.lexeme,scopeId,cval);
+                                                        if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                            exit(0);
+                                                        }
+                                                    }
                   | CONST INT VAR EQUAL FUNCTION_CALL
                   | CONST FLOAT VAR EQUAL FUNCTION_CALL
                   | CONST BOOL VAR EQUAL FUNCTION_CALL
@@ -251,7 +361,27 @@ term: term MULTIPLY factor          {
 
 factor: VAR                         {   
                                         //check if the variable is defined in the symbol table
-                                        printf("factor: VARs\n");
+                                        int type, isconst, isset;
+                                        if(strcmp (GetInfo($1.lexeme,scopeId,&type,&isconst,&isset), (char*)"1") != 0)
+                                        {   printf("VAR %s :not declared scopeId:%d",$1.lexeme,scopeId);
+                                            exit(0);
+                                        }else if(isset != 1){
+                                            printf("VAR %s :not initialized scopeId:%d",$1.lexeme,scopeId);
+                                            exit(0);
+                                        }
+                                        else if (type != 2 ){//not char
+                                            $$.typeId = type;
+                                            if (type == 0)
+                                            {
+                                                $$.ival = GetIntVal($1.lexeme,scopeId);
+                                            }else if(type == 1) 
+                                            {
+                                                $$.fval = GetFloatVal($1.lexeme,scopeId);
+                                            } else {
+                                                $$.bval = GetBoolVal($1.lexeme,scopeId);
+                                            }
+                                        }else   
+                                            yyerror("can't use CHAR in math_expr");
                                     } 
       | INT_VALUE                   { 
                                         $$.typeId = 0; // int type
@@ -283,6 +413,15 @@ logic_expr:'(' logic_expr ')'                       {
                                                         $$.bval = $2.bval;
                                                         printf("(logic_expr) => %s\n", $$.bval ? "true" : "false");
                                                     }
+          |VAR OR VAR                               {  
+                                                        int type1,type2, isconst;
+                                                        DecAndInit($1.lexeme,scopeId,type,isconst);
+                                                        DecAndInit($3.lexeme,scopeId,type2,isconst);
+                                                        if (type1 == 3 && type2 == 3 ){//type bool
+                                                            $$.bval = GetBoolVal($1.lexeme,scopeId) || GetBoolVal($3.lexeme,scopeId);
+                                                        }else   
+                                                            yyerror("Type mismatch logic_expr");
+                                                    }                              
           |logic_expr OR logic_expr                 {
                                                         $$.bval = $1.bval || $3.bval; 
                                                         printf("logic_expr || logic_expr\n")
@@ -294,6 +433,39 @@ logic_expr:'(' logic_expr ')'                       {
           |NOT logic_expr                           {
                                                         $$.bval = !$2.bval;
                                                         printf("!logic_expr\n")
+                                                    }
+          |NOT VAR                                  {
+                                                        int type;
+                                                        DecAndInit($2.lexeme,scopeId,type,isconst);
+                                                        if (type == 3 ){//type bool
+                                                            $$.bval = !GetBoolVal($2.lexeme,scopeId);
+                                                        }else   
+                                                            yyerror("Type mismatch logic_expr");
+                                                    }
+          |VAR AND logic_expr                       {
+                                                        int type;
+                                                        DecAndInit($1.lexeme,scopeId,type,isconst);
+                                                        if (type == 3 ){//type bool
+                                                            $$.bval = GetBoolVal($1.lexeme,scopeId) && $3.bval;
+                                                        }else   
+                                                            yyerror("Type mismatch logic_expr");
+                                                    }
+          |VAR AND VAR                              {
+                                                         int type1,type2, isconst;
+                                                        DecAndInit($1.lexeme,scopeId,type,isconst);
+                                                        DecAndInit($3.lexeme,scopeId,type2,isconst);
+                                                        if (type1 == 3 && type2 == 3 ){//type bool
+                                                            $$.bval = GetBoolVal($1.lexeme,scopeId) && GetBoolVal($3.lexeme,scopeId);
+                                                        }else   
+                                                            yyerror("Type mismatch logic_expr");
+                                                    }
+          |logic_expr AND VAR                       {
+                                                        int type;
+                                                        DecAndInit($3.lexeme,scopeId,type,isconst);
+                                                        if (type == 3 ){//type bool
+                                                            $$.bval = GetBoolVal($3.lexeme,scopeId) && $1.bval;
+                                                        }else   
+                                                            yyerror("Type mismatch logic_expr");
                                                     }
           |math_expr GreaterThanOrEqual math_expr   { 
                                                         $$.bval = (($1.typeId == 0) ? $1.ival :$1.fval) >= (($3.typeId == 0) ? $3.ival :$3.fval);
@@ -351,7 +523,10 @@ assignment: VAR EQUAL math_expr {printf("assignment: VAR = math_expr\n");}
            | VAR EQUAL FUNCTION_CALL {printf("assignment: VAR = Function call\n");}
           ;
 
-scope: SCOPE_OPEN statements SCOPE_CLOSE {printf("this is a scope\n")}
+StartScope: SCOPE_OPEN  {scopeId++; NewLevel();};
+EndScope: SCOPE_CLOSE  {scopeId--; removeLevel();};
+
+scope: StartScope statements EndScope {printf("this is a scope\n")}
      ;
 
 if_clause: IF_STATMENT logic_expr THEN statement %prec IFX  {printf("if-then")}
@@ -426,9 +601,11 @@ RETURN_STATEMENT: RETURN VAR            {printf("return Var \n");}
 %%
 
 int main (void) {
-
-
+    
     PrintFunc(1000);
+    NewLevel();
+
+    /*PrintFunc(1000);
     NewLevel();
     printf("%d\n",InserNewElement(0,0,"x",0,"5"));
     
@@ -458,7 +635,7 @@ int main (void) {
     printf("%d\n",InserNewElement(3,0,"m",0,"1"));
     printf("%d\n",GetBoolVal("m",0));
     printf("%d\n",UpdateVal(3,"m",0,"0"));
-    printf("%d\n",GetBoolVal("m",0));
+    printf("%d\n",GetBoolVal("m",0));*/
 
 
     /*PrintFunc(1000);

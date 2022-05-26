@@ -114,7 +114,7 @@ void removeLevel()
     scopes.pop_back();
 }
 
-int InserNewElement(int type, int isconstant, char *name, int level, char *value)
+char* InserNewElement(int type, int isconstant, char *name, int level, char *value)
 {
     string str = name;
     int Exist = GetExistingVarLevel(str, level);
@@ -133,14 +133,14 @@ int InserNewElement(int type, int isconstant, char *name, int level, char *value
             if (Isfloat(Val))
                 Nele.intval = stoi(Val);
             else
-                return -1; 
+                return (char*)"ERROR! Type mismatch"; 
             break;
         }
         case 1:
             if (Isfloat(Val))
                 Nele.floatval = stof(Val);
             else
-                return -1;
+                return (char*)"ERROR! Type mismatch";
             break;
         case 2:
         {
@@ -157,20 +157,18 @@ int InserNewElement(int type, int isconstant, char *name, int level, char *value
             else if(Val == "0")
                 Nele.boolvalue = false;
             else
-                return -1;
+                return (char*)"ERROR! Type mismatch";
             break;
         }
         }
         scopes[level][str] = Nele;
 
-        return 1;
+        return (char*)"1";
     }
-
-    printf("I am here 1");
-    return -1;
+    return (char*)"ERROR! varialbe already declared";
 }
 
-int InserNewElementInitial(int type, int isconstant, char *name, int level)
+char* InserNewElementInitial(int type, int isconstant, char *name, int level)
 {
     string str = name;
     int Exist = GetExistingVarLevel(str, level);
@@ -197,43 +195,51 @@ int InserNewElementInitial(int type, int isconstant, char *name, int level)
             break;
         }
         scopes[level][str] = Nele;
-        return 1;
+        return (char*)"1";
     }
-    return -1;
+    return (char*)"ERROR! varialbe already declared";
 }
 
-int UpdateVal(int type, char *name, int level, char *data)
+char* UpdateVal(int type, char *name, int level, char *data)
 {
     string str = name;
     int Exist = GetExistingVarLevel(str, level);
 
-    if (Exist == -1 || scopes[Exist][str].type != type || scopes[Exist][str].isConstant == 1)
+    if (Exist == -1)
     {
-        return -1;
+        return (char*)"ERROR! varialbe not declared";
+    }
+    if(scopes[Exist][str].isConstant == 1)
+    {
+        return (char*)"ERROR! Cannot change the value of a const";
     }
 
     struct element Nele = scopes[Exist][str];
 
     string Val = data;
 
-    switch (type)
+    switch (scopes[Exist][str].type)
     {
     case 0:
     {
-        if (Isfloat(Val))
+        if (Isfloat(Val) && type != 2)
             Nele.intval = stoi(Val);
         else
-            return -1;
+            return (char*)"ERROR! Type mismatch";
         break;
     }
     case 1:
-        if (Isfloat(Val))
+        if (Isfloat(Val) && type != 2)
             Nele.floatval = stof(Val);
         else
-            return -1;
+            return (char*)"ERROR! Type mismatch";
         break;
     case 2:
     {
+        if(type != 2)
+        {
+            return (char*)"ERROR! Type mismatch";
+        }
         if (str.size() == 0)
             Nele.charval = '\0';
         else
@@ -242,26 +248,26 @@ int UpdateVal(int type, char *name, int level, char *data)
     }
     case 3:
     {
-        if(Val == "1")
+        if(Val == "1" && type != 2)
             Nele.boolvalue = true;
-        else if(Val == "0")
+        else if(Val == "0" && type != 2)
             Nele.boolvalue = false;
         else
-            return -1;  
+            return (char*)"ERROR! Type mismatch";  
         break;      
     }
     }
     scopes[Exist][str] = Nele;
-    return 1;
+    return (char*)"1";
 }
 
-int GetInfo(char* name, int level, int* type, int* isconstant, int* isset)
+char* GetInfo(char* name, int level, int* type, int* isconstant, int* isset)
 {
     string str = name;
     int Exist = GetExistingVarLevel(str, level);
 
     if(Exist == -1)
-        return -1;
+        return (char*)"ERROR! Variable not declared";
     
     *type = scopes[Exist][str].type;
     
@@ -275,7 +281,7 @@ int GetInfo(char* name, int level, int* type, int* isconstant, int* isset)
     else
         *isset = 0;
 
-    return 1;
+    return (char*)"1";
 }
 
 int GetIntVal(char* name, int level)
