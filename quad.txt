@@ -24,3 +24,24 @@ MOV 	0 	a
 MOV 	0 	a 	
 MOV 	0 	a 	
 MOV 	0 	a 	
+MOV 	5 	x 	
+MOV 	0 	y 	
+MOV 	5 	a 	
+MOV 	0 	c 	
+MOV 	5 	a 	
+MOV 	0 	y 	
+MOV 	5 	a 	
+MOV 	0 	x 	
+MOV 	5 	a 	
+MOV 	0 	y 	
+MOV 	5 	a 	
+MOV 	5 	a 	
+MOV 	5 	a 	
+MOV 	5 	a 	
+MOV 	5 	a1 	
+MOV 	5 	a1 	
+MOV 	5 	a1 	
+MOV 	5 	a1 	
+MOV 	0 	x 	
+DIV 	5 	0 	5 	
+MOV 	5 	x 	

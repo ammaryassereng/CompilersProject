@@ -1,10 +1,2 @@
-scoope Id: 1
-a Variable type: int, value = 0 Constant: false initiallized: true
 scoope Id: 0
-func Function type: int
-f Argument type: int
-d Argument type: char
-x Argument type: int
-y Argument type: int
-c Argument type: float
-z Argument type: bool
+x Variable type: int, value = 5 Constant: false initiallized: true

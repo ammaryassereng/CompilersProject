@@ -119,12 +119,17 @@ typedef union YYSTYPE
     int bval; //0-false, 1-true
     char cval;
     char* lexeme;
-  }varinfo;                           
+  }varinfo;  
+
+  struct FunctionCallInfo{
+      int typeId;
+      char* lexeme;
+  }FunctionCallInfo;            
 
 
 
 /* Line 1676 of yacc.c  */
-#line 128 "yacc.tab.h"
+#line 133 "yacc.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

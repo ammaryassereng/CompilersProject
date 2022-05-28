@@ -22,10 +22,10 @@
         int isset;
         if(strcmp (GetInfo(VarName,scopeId,type,isconst,&isset), (char*)"1") != 0)
         {   printf("VAR %s :not declared scopeId:%d",VarName,scopeId);
-            exit(0);
+            //exit(0);
         }else if(isset != 1){
         printf("VAR %s :not initialized scopeId:%d",VarName,scopeId);
-            exit(0);
+            //exit(0);
         }
     }
 %}
@@ -53,7 +53,12 @@
     int bval; //0-false, 1-true
     char cval;
     char* lexeme;
-  }varinfo;                           
+  }varinfo;  
+
+  struct FunctionCallInfo{
+      int typeId;
+      char* lexeme;
+  }FunctionCallInfo;            
 };
 
 
@@ -68,6 +73,7 @@
 %type <mathinfo> factor term math_expr
 %type <logicinfo> logic_expr 
 %type <varinfo> VAR 
+%type <FunctionCallInfo> FUNCTION_CALL
 
 %nonassoc OR 
 %nonassoc AND
@@ -157,7 +163,7 @@ var_declaration : INT VAR                           {
                                                         if(strcmp (res, (char *)"1") != 0)
                                                         {
                                                             yyerror(res);
-                                                            exit(0);
+                                                            //exit(0);
                                                         }
                                                     } 
                 | FLOAT VAR EQUAL math_expr         {
@@ -179,7 +185,7 @@ var_declaration : INT VAR                           {
                                                         if(strcmp (res, (char *)"1") != 0)
                                                         {
                                                             yyerror(res);
-                                                            exit(0);
+                                                            //exit(0);
                                                         }
                                                     }
                 | BOOL VAR EQUAL logic_expr         {
@@ -190,7 +196,7 @@ var_declaration : INT VAR                           {
                                                         if(strcmp (res, (char *)"1") != 0)
                                                         {
                                                             yyerror(res);
-                                                            exit(0);
+                                                            //exit(0);
                                                         }
                                                     }
                 | CHAR VAR EQUAL CHAR_VALUE         {
@@ -201,13 +207,77 @@ var_declaration : INT VAR                           {
                                                         if(strcmp (res, (char *)"1") != 0)
                                                         {
                                                             yyerror(res);
-                                                            exit(0);
+                                                            //exit(0);
                                                         }
                                                     }
-                | INT VAR EQUAL FUNCTION_CALL 
-                | FLOAT VAR EQUAL FUNCTION_CALL
-                | BOOL VAR EQUAL FUNCTION_CALL
-                | CHAR VAR EQUAL FUNCTION_CALL
+                | INT VAR EQUAL FUNCTION_CALL       {
+                                                        char * res = GetFuncInfo($4.lexeme,scopeId,0);
+                                                        if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                            ////exit(0);
+                                                        }
+                                                        else
+                                                        {
+                                                            res = InserNewElementInitial(0,0,$2.lexeme,scopeId);
+                                                            if(strcmp (res, (char *)"1") != 0)
+                                                            {
+                                                                yyerror(res);
+                                                            }
+                                                            printf("var_declaration: INT VAR %s\n",$2.lexeme); 
+                                                        }
+                                                    } 
+                | FLOAT VAR EQUAL FUNCTION_CALL     {
+                                                        char * res = GetFuncInfo($4.lexeme,scopeId,1);
+                                                        if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                            ////exit(0);
+                                                        }
+                                                        else
+                                                        {
+                                                            res = InserNewElementInitial(1,0,$2.lexeme,scopeId);
+                                                            if(strcmp (res, (char *)"1") != 0)
+                                                            {
+                                                                yyerror(res);
+                                                            }
+                                                            printf("var_declaration: FLOAT VAR %s\n",$2.lexeme); 
+                                                        }
+                                                    }
+                | BOOL VAR EQUAL FUNCTION_CALL      {
+                                                        char * res = GetFuncInfo($4.lexeme,scopeId,3);
+                                                        if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                            ////exit(0);
+                                                        }
+                                                        else
+                                                        {
+                                                            res = InserNewElementInitial(3,0,$2.lexeme,scopeId);
+                                                            if(strcmp (res, (char *)"1") != 0)
+                                                            {
+                                                                yyerror(res);
+                                                            }
+                                                            printf("var_declaration: BOOL VAR %s\n",$2.lexeme); 
+                                                        }
+                                                    }
+                | CHAR VAR EQUAL FUNCTION_CALL      {
+                                                        char * res = GetFuncInfo($4.lexeme,scopeId,2);
+                                                        if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                            ////exit(0);
+                                                        }
+                                                        else
+                                                        {
+                                                            res = InserNewElementInitial(2,0,$2.lexeme,scopeId);
+                                                            if(strcmp (res, (char *)"1") != 0)
+                                                            {
+                                                                yyerror(res);
+                                                            }
+                                                            printf("var_declaration: CHAR VAR %s\n",$2.lexeme); 
+                                                        }
+                                                    }    
                 ;
 
 const_declaration : CONST INT VAR EQUAL math_expr  {
@@ -229,7 +299,7 @@ const_declaration : CONST INT VAR EQUAL math_expr  {
                                                         if(strcmp (res, (char *)"1") != 0)
                                                         {
                                                             yyerror(res);
-                                                            exit(0);
+                                                            //exit(0);
                                                         }
                                                     } 
                   | CONST FLOAT VAR EQUAL math_expr     {
@@ -251,7 +321,7 @@ const_declaration : CONST INT VAR EQUAL math_expr  {
                                                         if(strcmp (res, (char *)"1") != 0)
                                                         {
                                                             yyerror(res);
-                                                            exit(0);
+                                                            //exit(0);
                                                         }
                                                     } 
                   | CONST BOOL VAR EQUAL logic_expr     {
@@ -262,7 +332,7 @@ const_declaration : CONST INT VAR EQUAL math_expr  {
                                                         if(strcmp (res, (char *)"1") != 0)
                                                         {
                                                             yyerror(res);
-                                                            exit(0);
+                                                            //exit(0);
                                                         }
                                                     } 
                   | CONST CHAR VAR EQUAL CHAR_VALUE     {
@@ -273,13 +343,77 @@ const_declaration : CONST INT VAR EQUAL math_expr  {
                                                         if(strcmp (res, (char *)"1") != 0)
                                                         {
                                                             yyerror(res);
-                                                            exit(0);
+                                                            //exit(0);
                                                         }
                                                     }
-                  | CONST INT VAR EQUAL FUNCTION_CALL
-                  | CONST FLOAT VAR EQUAL FUNCTION_CALL
-                  | CONST BOOL VAR EQUAL FUNCTION_CALL
-                  | CONST CHAR VAR EQUAL FUNCTION_CALL
+                  | CONST INT VAR EQUAL FUNCTION_CALL   {
+                                                            char * res = GetFuncInfo($5.lexeme,scopeId,0);
+                                                            if(strcmp (res, (char *)"1") != 0)
+                                                            {
+                                                                yyerror(res);
+                                                                ////exit(0);
+                                                            }
+                                                            else
+                                                            {
+                                                                res = InserNewElementInitial(0,1,$3.lexeme,scopeId);
+                                                                if(strcmp (res, (char *)"1") != 0)
+                                                                {
+                                                                    yyerror(res);
+                                                                }
+                                                                printf("const var_declaration: INT VAR %s\n",$3.lexeme); 
+                                                            }
+                                                        }  
+                  | CONST FLOAT VAR EQUAL FUNCTION_CALL {
+                                                            char * res = GetFuncInfo($5.lexeme,scopeId,1);
+                                                            if(strcmp (res, (char *)"1") != 0)
+                                                            {
+                                                                yyerror(res);
+                                                                ////exit(0);
+                                                            }
+                                                            else
+                                                            {
+                                                                res = InserNewElementInitial(1,1,$3.lexeme,scopeId);
+                                                                if(strcmp (res, (char *)"1") != 0)
+                                                                {
+                                                                    yyerror(res);
+                                                                }
+                                                                printf("const var_declaration: FLOAT VAR %s\n",$3.lexeme); 
+                                                            }
+                                                        }
+                  | CONST BOOL VAR EQUAL FUNCTION_CALL  {
+                                                            char * res = GetFuncInfo($5.lexeme,scopeId,3);
+                                                            if(strcmp (res, (char *)"1") != 0)
+                                                            {
+                                                                yyerror(res);
+                                                                ////exit(0);
+                                                            }
+                                                            else
+                                                            {
+                                                                res = InserNewElementInitial(3,1,$3.lexeme,scopeId);
+                                                                if(strcmp (res, (char *)"1") != 0)
+                                                                {
+                                                                    yyerror(res);
+                                                                }
+                                                                printf("const var_declaration: BOOL VAR %s\n",$3.lexeme); 
+                                                            }
+                                                        }
+                  | CONST CHAR VAR EQUAL FUNCTION_CALL  {
+                                                            char * res = GetFuncInfo($5.lexeme,scopeId,2);
+                                                            if(strcmp (res, (char *)"1") != 0)
+                                                            {
+                                                                yyerror(res);
+                                                                ////exit(0);
+                                                            }
+                                                            else
+                                                            {
+                                                                res = InserNewElementInitial(2,1,$3.lexeme,scopeId);
+                                                                if(strcmp (res, (char *)"1") != 0)
+                                                                {
+                                                                    yyerror(res);
+                                                                }
+                                                                printf("const var_declaration: CHAR VAR %s\n",$3.lexeme); 
+                                                            }
+                                                        }
                   ;
    
 math_expr: math_expr PLUS term      {   
@@ -396,21 +530,47 @@ term: term MULTIPLY factor          {
                                             {
                                                 yyerror("WARNING: Type mismatch would cause up casting\n");
                                                 $$.typeId = 1;
-                                                if($1.typeId == 1) $$.fval = $1.fval / $3.ival;
-                                                else $$.fval = $1.ival / $3.fval;
+                                                if($1.typeId == 1)
+                                                { 
+                                                    if($3.ival == 0)
+                                                    {
+                                                        yyerror("WARNING: Possible Division By zero\n");
+                                                    }
+                                                    else
+                                                        $$.fval = $1.fval / $3.ival;
+                                                }
+                                                else
+                                                {
+                                                    if($3.fval == 0)
+                                                    {
+                                                        yyerror("WARNING: Possible Division By zero\n");
+                                                    }
+                                                    else  
+                                                        $$.fval = $1.ival / $3.fval;
+                                                }
                                                 printf("float => term / factor() = %f\n", $$.fval);
                                                 quad("DIV", fromFloatToChar($$.fval), fromFloatToChar($1.fval), fromIntToChar($3.ival));
                                             }
                                         else if($1.typeId == 0)
                                         {
                                             $$.typeId = 0;
-                                            $$.ival = $1.ival / $3.ival;
+                                            if($3.ival == 0)
+                                            {
+                                                yyerror("WARNING: Possible Division By zero\n");
+                                            }
+                                            else
+                                                $$.ival = $1.ival / $3.ival;
                                             quad("DIV", fromIntToChar($$.ival), fromIntToChar($1.ival), fromIntToChar($3.ival));
                                         }
                                         else if($1.typeId == 1)
                                         {
                                             $$.typeId = 1;
-                                            $$.fval = $1.fval / $3.fval;
+                                            if($3.fval == 0)
+                                            {
+                                                yyerror("WARNING: Possible Division By zero\n");
+                                            }
+                                            else
+                                                $$.fval = $1.fval / $3.fval;
                                             quad("DIV", fromFloatToChar($$.fval), fromFloatToChar($1.fval), fromFloatToChar($3.fval));
                                         }
                                     } 
@@ -577,7 +737,7 @@ assignment: VAR EQUAL math_expr                     {
                                                         int type, isconst, isset;
                                                         if(strcmp (GetInfo($1.lexeme,scopeId,&type,&isconst,&isset), (char*)"1") != 0)
                                                         {   printf("VAR %s :not declared scopeId:%d",$1.lexeme,scopeId);
-                                                            exit(0);
+                                                            //exit(0);
                                                         }
                                                     if ((type == 3 && $3.typeId != 3) || (type != 3 && $3.typeId == 3 ))
                                                         yyerror("ERROR: Invalid variable assignment");     
@@ -610,7 +770,7 @@ assignment: VAR EQUAL math_expr                     {
                                                      int type, isconst, isset;
                                                     if(strcmp (GetInfo($1.lexeme,scopeId,&type,&isconst,&isset), (char*)"1") != 0)
                                                         {   printf("VAR %s :not declared scopeId:%d",$1.lexeme,scopeId);
-                                                            exit(0);
+                                                            //exit(0);
                                                         }
                                                      if (type != 3)
                                                         yyerror("ERROR: Invalid variable assignment");
@@ -621,7 +781,7 @@ assignment: VAR EQUAL math_expr                     {
                                                     if(strcmp (res, (char *)"1") != 0)
                                                         {
                                                             yyerror(res);
-                                                            exit(0);
+                                                            //exit(0);
                                                         }  
                                                         printf("assignment: VAR = logic_expr\n");
                                                     }
@@ -629,7 +789,7 @@ assignment: VAR EQUAL math_expr                     {
                                                     int type, isconst, isset;
                                                     if(strcmp (GetInfo($1.lexeme,scopeId,&type,&isconst,&isset), (char*)"1") != 0)
                                                         {   printf("VAR %s :not declared scopeId:%d",$1.lexeme,scopeId);
-                                                            exit(0);
+                                                            //exit(0);
                                                         }
                                                      if (type != 2)
                                                         yyerror("ERROR: Invalid variable assignment");
@@ -639,11 +799,12 @@ assignment: VAR EQUAL math_expr                     {
                                                     if(strcmp (res, (char *)"1") != 0)
                                                         {
                                                             yyerror(res);
-                                                            exit(0);
+                                                            ////exit(0);
                                                         }  
                                                         printf("assignment: VAR = CHAR_VALUE\n");
                                                     }
-           | VAR EQUAL FUNCTION_CALL                {printf("assignment: VAR = Function call\n");}
+           | VAR EQUAL FUNCTION_CALL                {   printf("assignment: VAR = Function call\n");
+                                                    }
           ;
 
 StartScope: SCOPE_OPEN  {scopeId++; NewLevel();};
@@ -773,7 +934,9 @@ PARAMETERS: PARAMETERS COMMA INT VAR    {   char* res = InserNewArgument(0,$4.le
                                         }
           ;
 
-FUNCTION_CALL: VAR '(' CALL_PARAMETERS ')'  {printf("function_call \n");}
+FUNCTION_CALL: VAR '(' CALL_PARAMETERS ')'  {   printf("function_call \n");
+                                                $$.lexeme = $1.lexeme;
+                                            }
              ;
 
 CALL_PARAMETERS: CALL_PARAMETERS COMMA DATA | DATA {printf("call parameters\n");} ;

@@ -382,6 +382,26 @@ char *GetInfo(char *name, int level, int *type, int *isconstant, int *isset)
     return (char *)"1";
 }
 
+char *GetFuncInfo(char *name, int level, int type)
+{
+    string str = name;
+    int Exist = GetExistingVarLevel(str, level);
+    if (Exist == -1)
+        return (char *)"ERROR! Function not defined";
+    
+    if(scopes[Exist][str].GlobalType != 1)
+    {
+        return (char *)"ERROR! this is not a Function";
+    }
+
+    if(scopes[Exist][str].type != type)
+    {
+        return (char *)"ERROR! TYPE MISMATCH";
+    }
+
+    return (char *)"1";
+}
+
 int GetIntVal(char *name, int level)
 {
     string str = name;
