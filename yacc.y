@@ -7,6 +7,11 @@
     FILE *yyin;
     extern int yylex(void);
     extern void yyerror(char *);
+    extern void quad(char*, char*, char*, char*);
+    extern char* fromFloatToChar(float);
+    extern char* fromIntToChar(int);
+    extern char* fromBoolToChar(int);
+    extern char* fromCharToChar(char);
     int tokenValId = 0; 
     int tokensVal [10];
 
@@ -109,6 +114,8 @@ var_declaration : INT VAR                           {
                                                         {
                                                             yyerror(res);
                                                         }
+                                                        printf("var_declaration: INT VAR %s\n",$2.lexeme);
+                                                        
                                                     }
                 | FLOAT VAR                         {
                                                         char* res = InserNewElementInitial(1,0,$2.lexeme,scopeId);
@@ -139,8 +146,13 @@ var_declaration : INT VAR                           {
                                                         if($4.typeId == 0)
                                                         {
                                                             sprintf(cval, "%d", $4.ival);
+                                                            quad("MOV", $2.lexeme, cval,"");
                                                         } 
-                                                        else sprintf(cval, "%f", $4.fval);
+                                                        else 
+                                                        {
+                                                            sprintf(cval, "%f", $4.fval);
+                                                            quad("MOV", $2.lexeme, cval,"");
+                                                        }
                                                         char* res = InserNewElement(0,0,$2.lexeme,scopeId,cval);
                                                         if(strcmp (res, (char *)"1") != 0)
                                                         {
@@ -156,8 +168,13 @@ var_declaration : INT VAR                           {
                                                         if($4.typeId == 0)
                                                         {
                                                             sprintf(cval, "%d", $4.ival);
+                                                            quad("MOV", $2.lexeme, cval,"");
                                                         } 
-                                                        else sprintf(cval, "%f", $4.fval);
+                                                        else
+                                                        {
+                                                            sprintf(cval, "%f", $4.fval);
+                                                            quad("MOV", $2.lexeme, cval,"");
+                                                        }
                                                         char* res = InserNewElement(1,0,$2.lexeme,scopeId,cval);
                                                         if(strcmp (res, (char *)"1") != 0)
                                                         {
@@ -168,6 +185,7 @@ var_declaration : INT VAR                           {
                 | BOOL VAR EQUAL logic_expr         {
                                                         char  cval[1];
                                                         sprintf(cval, "%d", $4.bval);
+                                                        quad("MOV", $2.lexeme, cval,"");
                                                         char* res = InserNewElement(3,0,$2.lexeme,scopeId,cval);
                                                         if(strcmp (res, (char *)"1") != 0)
                                                         {
@@ -179,6 +197,7 @@ var_declaration : INT VAR                           {
                                                         char  cval[1];
                                                         cval[0] = $4;
                                                         char* res = InserNewElement(2,0,$2.lexeme,scopeId,cval);
+                                                        quad("MOV", $2.lexeme, fromCharToChar($4) ,"");
                                                         if(strcmp (res, (char *)"1") != 0)
                                                         {
                                                             yyerror(res);
@@ -199,8 +218,13 @@ const_declaration : CONST INT VAR EQUAL math_expr  {
                                                         if($5.typeId == 0)
                                                         {
                                                             sprintf(cval, "%d", $5.ival);
+                                                            quad("MOV", $3.lexeme, cval,"");
                                                         } 
-                                                        else sprintf(cval, "%f", $5.fval);
+                                                        else 
+                                                        {
+                                                            sprintf(cval, "%f", $5.fval);
+                                                            quad("MOV", $3.lexeme, cval,"");
+                                                        }
                                                         char* res = InserNewElement(0,1,$3.lexeme,scopeId,cval);
                                                         if(strcmp (res, (char *)"1") != 0)
                                                         {
@@ -216,8 +240,13 @@ const_declaration : CONST INT VAR EQUAL math_expr  {
                                                         if($5.typeId == 0)
                                                         {
                                                             sprintf(cval, "%d", $5.ival);
+                                                            quad("MOV", $3.lexeme, cval,"");
                                                         } 
-                                                        else sprintf(cval, "%f", $5.fval);
+                                                        else 
+                                                        {
+                                                            sprintf(cval, "%f", $5.fval);
+                                                            quad("MOV", $3.lexeme, cval,"");
+                                                        }
                                                         char* res = InserNewElement(1,1,$3.lexeme,scopeId,cval);
                                                         if(strcmp (res, (char *)"1") != 0)
                                                         {
@@ -228,6 +257,7 @@ const_declaration : CONST INT VAR EQUAL math_expr  {
                   | CONST BOOL VAR EQUAL logic_expr     {
                                                         char  cval[1];
                                                         sprintf(cval, "%d", $5.bval);
+                                                        quad("MOV", $3.lexeme, cval,"");
                                                         char* res = InserNewElement(3,1,$3.lexeme,scopeId,cval);
                                                         if(strcmp (res, (char *)"1") != 0)
                                                         {
@@ -238,6 +268,7 @@ const_declaration : CONST INT VAR EQUAL math_expr  {
                   | CONST CHAR VAR EQUAL CHAR_VALUE     {
                                                         char  cval[1];
                                                         cval[0] = $5;
+                                                        quad("MOV", $3.lexeme, cval,"");
                                                         char* res = InserNewElement(2,1,$3.lexeme,scopeId,cval);
                                                         if(strcmp (res, (char *)"1") != 0)
                                                         {
@@ -257,21 +288,32 @@ math_expr: math_expr PLUS term      {
                                             {
                                                 yyerror("WARNING: Type mismatch would cause up casting\n");
                                                 $$.typeId = 1;
-                                                if($1.typeId == 1) $$.fval = $1.fval + $3.ival;
-                                                else $$.fval = $1.ival + $3.fval;
+                                                if($1.typeId == 1) 
+                                                {
+                                                    $$.fval = $1.fval + $3.ival;
+                                                    quad("ADD", fromFloatToChar($$.fval), fromFloatToChar($1.fval), fromIntToChar($3.ival));
+                                                }
+                                                else 
+                                                {
+                                                    $$.fval = $1.ival + $3.fval;
+                                                    quad("ADD", fromFloatToChar($$.fval), fromIntToChar($1.ival), fromFloatToChar($3.fval));
+                                                }
                                             }
                                         else if($1.typeId == 0)
                                         {
                                             $$.typeId = 0;
                                             $$.ival = $1.ival + $3.ival;
                                             printf("int => math_expr: PLUS term() = %d\n", $$.ival);
+                                            quad("ADD", fromIntToChar($$.ival), fromIntToChar($1.ival), fromIntToChar($3.ival));
                                         }
                                         else if($1.typeId == 1)
                                         {
                                             $$.typeId = 1;
                                             $$.fval = $1.fval + $3.fval;
                                             printf("float => math_expr: PLUS term() = %f\n", $$.fval);
+                                            quad("ADD", fromFloatToChar($$.fval), fromFloatToChar($1.fval), fromFloatToChar($3.fval));
                                         }
+                                        
                                     } 
          | math_expr MINUS term     {   
                                         //check if the type of the expression is the same as the type of the variable
@@ -279,8 +321,16 @@ math_expr: math_expr PLUS term      {
                                             {
                                                 yyerror("WARNING: Type mismatch would cause up casting\n");
                                                 $$.typeId = 1;
-                                                if($1.typeId == 1) $$.fval = $1.fval - $3.ival;
-                                                else $$.fval = $1.ival - $3.fval;
+                                                if($1.typeId == 1)
+                                                {
+                                                    $$.fval = $1.fval - $3.ival;
+                                                    quad("SUB", fromFloatToChar($$.fval), fromFloatToChar($1.fval), fromIntToChar($3.ival));
+                                                } 
+                                                else
+                                                {
+                                                    $$.fval = $1.ival - $3.fval;
+                                                    quad("SUB", fromFloatToChar($$.fval), fromIntToChar($1.ival), fromFloatToChar($3.fval));
+                                                } 
                                                 printf("float => math_expr: MINUS term() = %f\n", $$.fval);
                                             }
                                         else if($1.typeId == 0)
@@ -288,12 +338,14 @@ math_expr: math_expr PLUS term      {
                                             $$.typeId = 0;
                                             $$.ival = $1.ival - $3.ival;
                                             printf("int => math_expr: MINUS term() = %d\n", $$.ival);
+                                            quad("SUB", fromIntToChar($$.ival), fromIntToChar($1.ival), fromIntToChar($3.ival));
                                         }
                                         else if($1.typeId == 1)
                                         {
                                             $$.typeId = 1;
                                             $$.fval = $1.fval - $3.fval;
                                             printf("float => math_expr: MINUS term() = %f\n", $$.fval);
+                                            quad("SUB", fromFloatToChar($$.fval), fromFloatToChar($1.fval), fromFloatToChar($3.fval));
                                         }
                                     } 
          | term                     { 
@@ -302,10 +354,12 @@ math_expr: math_expr PLUS term      {
                                         {   
                                             $$.ival = $1.ival;
                                             printf("int => term = %d and typeId:%d \n" , $1.ival , $1.typeId );
+                                            //quad("MOV", fromIntToChar($$.ival), fromIntToChar($1.ival),"");
                                         }
                                         else {
                                             $$.fval = $1.fval;
                                             printf("float => term = %f and typeId:%d \n" , $1.fval , $1.typeId );
+                                            //quad("MOV", fromFloatToChar($$.fval), fromFloatToChar($1.fval),"");
                                         }
                                     }
          ;
@@ -319,18 +373,21 @@ term: term MULTIPLY factor          {
                                                 if($1.typeId == 1) $$.fval = $1.fval * $3.ival;
                                                 else $$.fval = $1.ival * $3.fval;
                                                 printf("float => term MULTIPLY factor() = %f\n", $$.fval);
+                                                quad("MUL", fromFloatToChar($$.fval), fromFloatToChar($1.fval), fromIntToChar($3.ival));
                                             }
                                         else if($1.typeId == 0)
                                         {
                                             $$.typeId = 0;
                                             $$.ival = $1.ival * $3.ival;
                                             printf("int => term MULTIPLY factor() = %d\n", $$.ival);
+                                            quad("MUL", fromIntToChar($$.ival), fromIntToChar($1.ival), fromIntToChar($3.ival));
                                         }
                                         else if($1.typeId == 1)
                                         {
                                             $$.typeId = 1;
                                             $$.fval = $1.fval * $3.fval;
                                             printf("float => term MULTIPLY factor() = %f\n", $$.fval);
+                                            quad("MUL", fromFloatToChar($$.fval), fromFloatToChar($1.fval), fromFloatToChar($3.fval));
                                         }
                                     } 
     | term DIVISIDE factor          {
@@ -342,16 +399,19 @@ term: term MULTIPLY factor          {
                                                 if($1.typeId == 1) $$.fval = $1.fval / $3.ival;
                                                 else $$.fval = $1.ival / $3.fval;
                                                 printf("float => term / factor() = %f\n", $$.fval);
+                                                quad("DIV", fromFloatToChar($$.fval), fromFloatToChar($1.fval), fromIntToChar($3.ival));
                                             }
                                         else if($1.typeId == 0)
                                         {
                                             $$.typeId = 0;
                                             $$.ival = $1.ival / $3.ival;
+                                            quad("DIV", fromIntToChar($$.ival), fromIntToChar($1.ival), fromIntToChar($3.ival));
                                         }
                                         else if($1.typeId == 1)
                                         {
                                             $$.typeId = 1;
                                             $$.fval = $1.fval / $3.fval;
+                                            quad("DIV", fromFloatToChar($$.fval), fromFloatToChar($1.fval), fromFloatToChar($3.fval));
                                         }
                                     } 
     | factor                        { 
@@ -360,10 +420,12 @@ term: term MULTIPLY factor          {
                                         {   
                                             $$.ival = $1.ival;
                                             printf("int => factor = %d and typeId:%d \n" , $1.ival , $1.typeId );
+                                            //quad("MOV", fromIntToChar($$.ival), fromIntToChar($1.ival),"");
                                         }
                                         else if($1.typeId == 1) {
                                             $$.fval = $1.fval;
                                             printf("float => factor = %f and typeId:%d \n" , $1.fval , $1.typeId );
+                                            //quad("MOV", fromFloatToChar($$.fval), fromFloatToChar($1.fval),"");
                                         }
                                     }
     ;
@@ -383,11 +445,14 @@ factor: VAR                         {
                                             if (type == 0)
                                             {
                                                 $$.ival = GetIntVal($1.lexeme,scopeId);
+                                                //quad("MOV", fromIntToChar($$.ival), fromIntToChar(GetIntVal($1.lexeme,scopeId)),"");
                                             }else if(type == 1) 
                                             {
                                                 $$.fval = GetFloatVal($1.lexeme,scopeId);
+                                                //quad("MOV", fromFloatToChar($$.fval), fromFloatToChar(GetFloatVal($1.lexeme,scopeId)),"");
                                             } else {
                                                 $$.bval = GetBoolVal($1.lexeme,scopeId);
+                                                //quad("MOV", fromBoolToChar($$.bval), fromBoolToChar(GetBoolVal($1.lexeme,scopeId)),"");
                                             }
                                         }else   
                                             yyerror("can't use CHAR in math_expr");
@@ -396,11 +461,13 @@ factor: VAR                         {
                                         $$.typeId = 0; // int type
                                         $$.ival = $1;
                                         printf("factor: INT_VALUE = %d\n",$1);
+                                        //quad("MOV", fromIntToChar($$.ival), fromIntToChar($1),"");
                                     } 
       | DECIMAL_VALUE               {
                                         $$.typeId = 1; // float type
                                         $$.fval = $1; // float type
                                         printf("factor: DECIMAL_VALUE = %f\n",$1);
+                                        //quad("MOV", fromFloatToChar($$.fval), fromFloatToChar($1),"");
                                     } 
       | '(' math_expr ')'           {
                                         $$.typeId = $2.typeId;
@@ -408,10 +475,12 @@ factor: VAR                         {
                                         {   
                                             $$.ival = $2.ival;
                                             printf("int => factor: (math_expr) = %d and typeId:%d \n" , $2.ival , $2.typeId );
+                                            //quad("MOV", fromIntToChar($$.ival), fromIntToChar($2.ival),"");
                                         }
                                         else {
                                             $$.fval = $2.fval;
                                             printf("float => factor: (math_expr) = %f and typeId:%d \n" , $2.fval , $2.typeId );
+                                            //quad("MOV", fromFloatToChar($$.fval), fromFloatToChar($2.fval),"");
                                         }
                                     }
       ;
@@ -421,21 +490,26 @@ factor: VAR                         {
 logic_expr:'(' logic_expr ')'                       {
                                                         $$.bval = $2.bval;
                                                         printf("(logic_expr) => %s\n", $$.bval ? "true" : "false");
+                                                        //quad("MOV", fromBoolToChar($$.bval), fromBoolToChar($2.bval),"");
                                                     }                              
           |logic_expr OR logic_expr                 {
                                                         $$.bval = $1.bval || $3.bval; 
+                                                        quad("OR", fromBoolToChar($$.bval), fromBoolToChar($1.bval), fromBoolToChar($3.bval));
                                                     }
           |logic_expr AND logic_expr                { 
                                                         $$.bval = $1.bval && $3.bval;
+                                                        quad("AND", fromBoolToChar($$.bval), fromBoolToChar($1.bval), fromBoolToChar($3.bval));
                                                     }
           |NOT logic_expr                           {
                                                         $$.bval = !$2.bval;
+                                                        quad("NOT", fromBoolToChar($$.bval), fromBoolToChar($2.bval),"");
                                                     }
           |NOT VAR                                  {
                                                         int type,isconst;
                                                         DecAndInit($2.lexeme,scopeId,&type,&isconst);
                                                         if (type == 3 ){//type bool
                                                             $$.bval = !GetBoolVal($2.lexeme,scopeId);
+                                                            quad("NOT", fromBoolToChar($$.bval), fromBoolToChar(GetBoolVal($2.lexeme,scopeId)),"");
                                                         }else   
                                                             yyerror("Type mismatch logic_expr");
                                                     }
@@ -511,11 +585,20 @@ assignment: VAR EQUAL math_expr                     {
                                                         yyerror("ERROR: Invalid variable assignment");   
                                                     char cval[10];
                                                     if ($3.typeId == 0)
+                                                    {
                                                         sprintf(cval, "%d", $3.ival);
+                                                        quad("MOV", $1.lexeme, cval, "");
+                                                    }
                                                     else if ($3.typeId == 1)
+                                                    {
                                                         sprintf(cval, "%d", $3.fval);
+                                                        quad("MOV", $1.lexeme, cval, "");
+                                                    }
                                                     else if ($3.typeId == 3)
+                                                    {
                                                         sprintf(cval, "%d", $3.bval);
+                                                        quad("MOV", $1.lexeme, cval, "");
+                                                    }
                                                     char *res = UpdateVal(type, $1.lexeme, scopeId, cval);
                                                     if(strcmp (res, (char *)"1") != 0)
                                                         {
@@ -533,6 +616,7 @@ assignment: VAR EQUAL math_expr                     {
                                                         yyerror("ERROR: Invalid variable assignment");
                                                     char cval[10];
                                                     sprintf(cval, "%d", $3.bval);
+                                                    quad("MOV", $1.lexeme, cval, "");
                                                     char *res = UpdateVal(type, $1.lexeme, scopeId, cval);
                                                     if(strcmp (res, (char *)"1") != 0)
                                                         {
@@ -638,7 +722,53 @@ RETURN_STATEMENT: RETURN VAR            {printf("return Var \n");}
                 ;
 
 %%
+void quad(char* operation, char* destination, char* source1, char* source2) {
+char *filename = "quad.txt";
 
+    // open the file for writing
+    FILE *fptr = fopen(filename, "ab");
+    if (fptr == NULL)
+    {
+        printf("Error opening the file %s", filename);
+    }
+    // write to the text file
+
+    fprintf(fptr,"%s \t",operation);
+    fprintf(fptr,"%s \t",source1);
+    if (source2 != "")
+        fprintf(fptr,"%s \t",source2);
+    fprintf(fptr,"%s \t",destination);
+    fprintf(fptr,"\n");
+    // close the file
+    fclose(fptr);
+}
+char* fromFloatToChar(float f)
+{
+    char *str = (char*)malloc(sizeof(char)*10);
+    sprintf(str, "%f", f);
+    return str;
+}
+char* fromIntToChar(int i)
+{
+    char *str = (char*)malloc(sizeof(char)*10);
+    sprintf(str, "%d", i);
+    return str;
+}
+char* fromBoolToChar(int b)
+{
+    char *str = (char*)malloc(sizeof(char)*10);
+    if (b == 0)
+        sprintf(str, "false");
+    else
+        sprintf(str, "true");
+    return str;
+}
+char* fromCharToChar(char c)
+{
+    char *str = (char*)malloc(sizeof(char)*10);
+    sprintf(str, "%c", c);
+    return str;
+}
 int main (void) {
     
     NewLevel();
