@@ -675,23 +675,32 @@ logic_expr:'(' logic_expr ')'                       {
                                                     }
           |math_expr GreaterThanOrEqual math_expr   { 
                                                         $$.bval = (($1.typeId == 0) ? $1.ival :$1.fval) >= (($3.typeId == 0) ? $3.ival :$3.fval);
-                                                        printf("statement >= statement\n")
+                                                        printf("statement >= statement\n");
+                                                        quad("GE", fromBoolToChar($$.bval), ($1.typeId == 0 ? fromIntToChar($1.ival) : fromFloatToChar($1.fval)), ($3.typeId == 0 ? fromIntToChar($3.ival) : fromFloatToChar($3.fval)));
                                                     }
           |math_expr GreaterThan math_expr          {   
                                                         $$.bval = (($1.typeId == 0) ? $1.ival :$1.fval) > (($3.typeId == 0) ? $3.ival :$3.fval);
-                                                        printf("statement > statement\n")
+                                                        printf("statement > statement\n");
+                                                        quad("GT", fromBoolToChar($$.bval), ($1.typeId == 0 ? fromIntToChar($1.ival) : fromFloatToChar($1.fval)), ($3.typeId == 0 ? fromIntToChar($3.ival) : fromFloatToChar($3.fval)));
                                                     }
           |math_expr EqualEqual math_expr           {   
                                                         $$.bval = (($1.typeId == 0) ? $1.ival :$1.fval) == (($3.typeId == 0) ? $3.ival :$3.fval);
-                                                    }
+                                                        printf("statement == statement\n");
+                                                        quad("EQ", fromBoolToChar($$.bval), ($1.typeId == 0 ? fromIntToChar($1.ival) : fromFloatToChar($1.fval)), ($3.typeId == 0 ? fromIntToChar($3.ival) : fromFloatToChar($3.fval)));                                                    }
           |math_expr LessThanOrEqual math_expr      {   
                                                         $$.bval = (($1.typeId == 0) ? $1.ival :$1.fval) <= (($3.typeId == 0) ? $3.ival :$3.fval);
+                                                        printf("statement <= statement\n");
+                                                        quad("LE", fromBoolToChar($$.bval), ($1.typeId == 0 ? fromIntToChar($1.ival) : fromFloatToChar($1.fval)), ($3.typeId == 0 ? fromIntToChar($3.ival) : fromFloatToChar($3.fval)));
                                                     }
           |math_expr LessThan math_expr             {
                                                         $$.bval = (($1.typeId == 0) ? $1.ival :$1.fval) < (($3.typeId == 0) ? $3.ival :$3.fval);   
+                                                        printf("statement < statement\n");
+                                                        quad("LT", fromBoolToChar($$.bval), ($1.typeId == 0 ? fromIntToChar($1.ival) : fromFloatToChar($1.fval)), ($3.typeId == 0 ? fromIntToChar($3.ival) : fromFloatToChar($3.fval)));
                                                     }
           |math_expr NotEqual math_expr             {  
                                                         $$.bval = (($1.typeId == 0) ? $1.ival :$1.fval) != (($3.typeId == 0) ? $3.ival :$3.fval); 
+                                                        printf("statement != statement\n");
+                                                        quad("NE", fromBoolToChar($$.bval), ($1.typeId == 0 ? fromIntToChar($1.ival) : fromFloatToChar($1.fval)), ($3.typeId == 0 ? fromIntToChar($3.ival) : fromFloatToChar($3.fval)));
                                                     }
           |VAR IS TRUE                              {
                                                         int type,isconst;
@@ -795,6 +804,7 @@ assignment: VAR EQUAL math_expr                     {
                                                         yyerror("ERROR: Invalid variable assignment");
                                                     char cval[1];
                                                     cval[0] = $3;
+                                                    quad("MOV", $1.lexeme, fromCharToChar($3) ,"");
                                                     char *res = UpdateVal(type, $1.lexeme, scopeId, cval);
                                                     if(strcmp (res, (char *)"1") != 0)
                                                         {
