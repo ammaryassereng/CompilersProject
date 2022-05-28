@@ -1,0 +1,5 @@
+MOV 	5 	x 	
+ADD 	5 	1 	6 	
+MOV 	6 	x 	
+ADD 	6 	5 	11 	
+MOV 	11 	y 	
