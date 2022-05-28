@@ -1,4 +1,1 @@
 ------------- transcript ----------
-line 2 : ERROR! varialbe already declared 
-line 3 : VAR êsx :not declared 
-line 3 : ERROR! Type mismatch 

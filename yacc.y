@@ -685,20 +685,92 @@ REPEATUNTILL: REPEAT_STATEMENT scope UNTILL logic_expr
 
 FUNCTION_STATEMENT: FUNCTION_DEFINITION scope;
 
-FUNCTION_DEFINITION: INT VAR '(' PARAMETERS ')'
-                   | FLOAT VAR '(' PARAMETERS ')'
-                   | BOOL VAR '(' PARAMETERS ')'
-                   | CHAR VAR '(' PARAMETERS ')'
+FUNCTION_DEFINITION: INT VAR '(' PARAMETERS ')'     {   char* res = InserNewFunction(0,$2.lexeme,scopeId);
+                                                        if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                        }
+                                                        printf("Function_declaration: INT VAR %s\n",$2.lexeme);
+                                                    }
+                   | FLOAT VAR '(' PARAMETERS ')'   {   char* res = InserNewFunction(1,$2.lexeme,scopeId);
+                                                        if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                        }
+                                                        printf("Function_declaration: FLOAT VAR %s\n",$2.lexeme);
+                                                    }
+                   | BOOL VAR '(' PARAMETERS ')'    {   char* res = InserNewFunction(3,$2.lexeme,scopeId);
+                                                        if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                        }
+                                                        printf("Function_declaration: BOOL VAR %s\n",$2.lexeme);
+                                                    }
+                   | CHAR VAR '(' PARAMETERS ')'    {   char* res = InserNewFunction(2,$2.lexeme,scopeId);
+                                                        if(strcmp (res, (char *)"1") != 0)
+                                                        {
+                                                            yyerror(res);
+                                                        }
+                                                        printf("Function_declaration: CHAR VAR %s\n",$2.lexeme);
+                                                    }
                    ;
 
-PARAMETERS: PARAMETERS COMMA INT VAR
-          | PARAMETERS COMMA FLOAT VAR
-          | PARAMETERS COMMA BOOL VAR
-          | PARAMETERS COMMA CHAR VAR
-          | INT VAR
-          | FLOAT VAR
-          | BOOL VAR
-          | CHAR VAR
+PARAMETERS: PARAMETERS COMMA INT VAR    {   char* res = InserNewArgument(0,$4.lexeme,scopeId);
+                                            if(strcmp (res, (char *)"1") != 0)
+                                            {
+                                                yyerror(res);
+                                            }
+                                            printf("Argument_declaration: INT VAR %s\n",$4.lexeme);
+                                        }
+          | PARAMETERS COMMA FLOAT VAR  {   char* res = InserNewArgument(1,$4.lexeme,scopeId);
+                                            if(strcmp (res, (char *)"1") != 0)
+                                            {
+                                                yyerror(res);
+                                            }
+                                            printf("Argument_declaration: FLOAT VAR %s\n",$4.lexeme);
+                                        }
+          | PARAMETERS COMMA BOOL VAR   {   char* res = InserNewArgument(3,$4.lexeme,scopeId);
+                                            if(strcmp (res, (char *)"1") != 0)
+                                            {
+                                                yyerror(res);
+                                            }
+                                            printf("Argument_declaration: BOOL VAR %s\n",$4.lexeme);
+                                        }
+          | PARAMETERS COMMA CHAR VAR   {   char* res = InserNewArgument(2,$4.lexeme,scopeId);
+                                            if(strcmp (res, (char *)"1") != 0)
+                                            {
+                                                yyerror(res);
+                                            }
+                                            printf("Argument_declaration: CHAR VAR %s\n",$4.lexeme);
+                                        }
+          | INT VAR                     {   char* res = InserNewArgument(0,$2.lexeme,scopeId);
+                                            if(strcmp (res, (char *)"1") != 0)
+                                            {
+                                                yyerror(res);
+                                            }
+                                            printf("Argument_declaration: INT VAR %s\n",$2.lexeme);
+                                        }
+          | FLOAT VAR                   {   char* res = InserNewArgument(1,$2.lexeme,scopeId);
+                                            if(strcmp (res, (char *)"1") != 0)
+                                            {
+                                                yyerror(res);
+                                            }
+                                            printf("Argument_declaration: FLOAT VAR %s\n",$2.lexeme);
+                                        }
+          | BOOL VAR                    {   char* res = InserNewArgument(3,$2.lexeme,scopeId);
+                                            if(strcmp (res, (char *)"1") != 0)
+                                            {
+                                                yyerror(res);
+                                            }
+                                            printf("Argument_declaration: BOOL VAR %s\n",$2.lexeme);
+                                        }
+          | CHAR VAR                    {   char* res = InserNewArgument(2,$2.lexeme,scopeId);
+                                            if(strcmp (res, (char *)"1") != 0)
+                                            {
+                                                yyerror(res);
+                                            }
+                                            printf("Argument_declaration: CHAR VAR %s\n",$2.lexeme);
+                                        }
           ;
 
 FUNCTION_CALL: VAR '(' CALL_PARAMETERS ')'  {printf("function_call \n");}

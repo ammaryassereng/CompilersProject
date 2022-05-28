@@ -3,3 +3,24 @@ ADD 	5 	1 	6
 MOV 	6 	x 	
 ADD 	6 	5 	11 	
 MOV 	11 	y 	
+MOV 	5 	x 	
+MOV 	a 	a 	
+MOV 	a 	hi 	
+MOV 	a 	hi 	
+MOV 	a 	hi 	
+MOV 	0 	x 	
+MOV 	0 	x 	
+MOV 	0 	x 	
+MOV 	0 	x 	
+MOV 	0 	x 	
+MOV 	0 	x 	
+MOV 	0 	x 	
+MOV 	0 	x 	
+MOV 	0 	a 	
+MOV 	0 	a 	
+MOV 	0 	a 	
+MOV 	0 	a 	
+MOV 	0 	a 	
+MOV 	0 	a 	
+MOV 	0 	a 	
+MOV 	0 	a 	

@@ -10,6 +10,7 @@ using namespace std;
 
 struct element
 {
+    int GlobalType;
     int type;
     int isConstant;
     string VarName;
@@ -22,7 +23,6 @@ struct element
 };
 
 ofstream myfile;
-
 
 /*unordered_map<char*,struct element> SymbolTable;
 
@@ -68,7 +68,7 @@ bool IsDigits(string str)
 {
     for (int i = 0; i < (int)str.size(); i++)
     {
-        if(str[0] == '-')
+        if (str[0] == '-')
             continue;
         if (!(str[i] == '0' || str[i] == '1' || str[i] == '2' || str[i] == '3' || str[i] == '4' || str[i] == '5' || str[i] == '6' || str[i] == '7' || str[i] == '8' || str[i] == '9'))
             return false;
@@ -81,7 +81,7 @@ bool Isfloat(string str)
     bool foundDot = false;
     for (int i = 0; i < (int)str.size(); i++)
     {
-        if(str[0] == '-')
+        if (str[0] == '-')
             continue;
         if (str[i] == '0' || str[i] == '1' || str[i] == '2' || str[i] == '3' || str[i] == '4' || str[i] == '5' || str[i] == '6' || str[i] == '7' || str[i] == '8' || str[i] == '9')
             continue;
@@ -114,8 +114,8 @@ int GetExistingVarLevel(string VarName, int level)
 
 void NewLevel()
 {
-    if(!myfile.is_open())
-        myfile.open ("SymbolTable.txt");
+    if (!myfile.is_open())
+        myfile.open("SymbolTable.txt");
     unordered_map<string, element> val;
     scopes.push_back(val);
 }
@@ -123,43 +123,60 @@ void NewLevel()
 void removeLevel()
 {
     int currlevel = scopes.size() - 1;
-    myfile << currlevel <<endl;
-    for(pair<string,element>Variable : scopes[currlevel])
+    myfile << "scoope Id: " << currlevel << endl;
+    for (pair<string, element> Variable : scopes[currlevel])
     {
         string dataToPrint = Variable.second.VarName;
 
-        if(Variable.second.type == 0)
-            dataToPrint += " type: int, value = " + to_string(Variable.second.intval);
-        else if(Variable.second.type == 1)
-            dataToPrint += " type: float, value = " + to_string(Variable.second.floatval);
-        else if(Variable.second.type == 2)
+        if (Variable.second.GlobalType == 0)
+            dataToPrint += " Variable";
+        else if (Variable.second.GlobalType == 1)
+            dataToPrint += " Function";
+        else if (Variable.second.GlobalType == 2)
+            dataToPrint += " Argument";
+
+        if (Variable.second.type == 0)
+            dataToPrint += " type: int";
+        else if (Variable.second.type == 1)
+            dataToPrint += " type: float";
+        else if (Variable.second.type == 2)
+            dataToPrint += " type: char";
+        else if (Variable.second.type == 3)
+            dataToPrint += " type: bool";
+
+        if (Variable.second.GlobalType == 0)
         {
-            dataToPrint += " type: char, value = " + to_string(Variable.second.charval);
+            if (Variable.second.type == 0)
+                dataToPrint += ", value = " + to_string(Variable.second.intval);
+            else if (Variable.second.type == 1)
+                dataToPrint += ", value = " + to_string(Variable.second.floatval);
+            else if (Variable.second.type == 2)
+            {
+                dataToPrint += ", value = " + to_string(Variable.second.charval);
+            }
+            else if (Variable.second.type == 3)
+                dataToPrint += ", value = " + to_string(Variable.second.boolvalue);
+
+            if (Variable.second.isConstant == true)
+                dataToPrint += " Constant: true";
+            else
+                dataToPrint += " Constant: false";
+
+            if (Variable.second.IsSet)
+                dataToPrint += " initiallized: true";
+            else
+                dataToPrint += " initiallized: false";
         }
-        else if(Variable.second.type == 3)
-            dataToPrint += " type: bool, value = " + to_string(Variable.second.boolvalue);
-        
-        if(Variable.second.isConstant == true)
-            dataToPrint += " Constant: true";
-        else
-            dataToPrint += " Constant: false";
-
-        if(Variable.second.IsSet)
-            dataToPrint += " initiallized: true";
-        else
-            dataToPrint += " initiallized: false";
-
-        myfile << dataToPrint <<endl;
-
+        myfile << dataToPrint << endl;
     }
-    if(currlevel == 0)
+    if (currlevel == 0)
     {
         myfile.close();
     }
     scopes.pop_back();
 }
 
-char* InserNewElement(int type, int isconstant, char *name, int level, char *value)
+char *InserNewElement(int type, int isconstant, char *name, int level, char *value)
 {
     string str = name;
     int Exist = GetExistingVarLevel(str, level);
@@ -167,6 +184,7 @@ char* InserNewElement(int type, int isconstant, char *name, int level, char *val
     {
         string Val = value;
         struct element Nele;
+        Nele.GlobalType = 0;
         Nele.type = type;
         Nele.isConstant = isconstant;
         Nele.VarName = str;
@@ -178,14 +196,14 @@ char* InserNewElement(int type, int isconstant, char *name, int level, char *val
             if (Isfloat(Val))
                 Nele.intval = stoi(Val);
             else
-                return (char*)"ERROR! Type mismatch"; 
+                return (char *)"ERROR! Type mismatch";
             break;
         }
         case 1:
             if (Isfloat(Val))
                 Nele.floatval = stof(Val);
             else
-                return (char*)"ERROR! Type mismatch";
+                return (char *)"ERROR! Type mismatch";
             break;
         case 2:
         {
@@ -197,29 +215,30 @@ char* InserNewElement(int type, int isconstant, char *name, int level, char *val
         }
         case 3:
         {
-            if(Val == "1")
+            if (Val == "1")
                 Nele.boolvalue = true;
-            else if(Val == "0")
+            else if (Val == "0")
                 Nele.boolvalue = false;
             else
-                return (char*)"ERROR! Type mismatch";
+                return (char *)"ERROR! Type mismatch";
             break;
         }
         }
         scopes[level][str] = Nele;
 
-        return (char*)"1";
+        return (char *)"1";
     }
-    return (char*)"ERROR! varialbe already declared";
+    return (char *)"ERROR! varialbe already declared";
 }
 
-char* InserNewElementInitial(int type, int isconstant, char *name, int level)
+char *InserNewElementInitial(int type, int isconstant, char *name, int level)
 {
     string str = name;
     int Exist = GetExistingVarLevel(str, level);
     if (Exist == -1 || Exist != level)
     {
         struct element Nele;
+        Nele.GlobalType = 0;
         Nele.type = type;
         Nele.isConstant = isconstant;
         Nele.VarName = str;
@@ -240,23 +259,57 @@ char* InserNewElementInitial(int type, int isconstant, char *name, int level)
             break;
         }
         scopes[level][str] = Nele;
-        return (char*)"1";
+        return (char *)"1";
     }
-    return (char*)"ERROR! varialbe already declared";
+    return (char *)"ERROR! varialbe already declared";
 }
 
-char* UpdateVal(int type, char *name, int level, char *data)
+char *InserNewFunction(int type, char *name, int level)
+{
+    string str = name;
+    int Exist = GetExistingVarLevel(str, level);
+    if (Exist == -1 || Exist != level)
+    {
+        struct element Nele;
+        Nele.GlobalType = 1;
+        Nele.type = type;
+        Nele.VarName = str;
+        Nele.IsSet = false;
+        scopes[level][str] = Nele;
+        return (char *)"1";
+    }
+    return (char *)"ERROR! Function name already declared";
+}
+
+char *InserNewArgument(int type, char *name, int level)
+{
+    string str = name;
+    int Exist = GetExistingVarLevel(str, level);
+    if (Exist == -1 || Exist != level)
+    {
+        struct element Nele;
+        Nele.GlobalType = 2;
+        Nele.type = type;
+        Nele.VarName = str;
+        Nele.IsSet = false;
+        scopes[level][str] = Nele;
+        return (char *)"1";
+    }
+    return (char *)"ERROR! Argument name already declared";
+}
+
+char *UpdateVal(int type, char *name, int level, char *data)
 {
     string str = name;
     int Exist = GetExistingVarLevel(str, level);
 
     if (Exist == -1)
     {
-        return (char*)"ERROR! varialbe not declared";
+        return (char *)"ERROR! varialbe not declared";
     }
-    if(scopes[Exist][str].isConstant == 1)
+    if (scopes[Exist][str].isConstant == 1)
     {
-        return (char*)"ERROR! Cannot change the value of a const";
+        return (char *)"ERROR! Cannot change the value of a const";
     }
 
     struct element Nele = scopes[Exist][str];
@@ -271,20 +324,20 @@ char* UpdateVal(int type, char *name, int level, char *data)
         if (Isfloat(Val) && type != 2)
             Nele.intval = stoi(Val);
         else
-            return (char*)"ERROR! Type mismatch";
+            return (char *)"ERROR! Type mismatch";
         break;
     }
     case 1:
         if (Isfloat(Val) && type != 2)
             Nele.floatval = stof(Val);
         else
-            return (char*)"ERROR! Type mismatch";
+            return (char *)"ERROR! Type mismatch";
         break;
     case 2:
     {
-        if(type != 2)
+        if (type != 2)
         {
-            return (char*)"ERROR! Type mismatch";
+            return (char *)"ERROR! Type mismatch";
         }
         if (str.size() == 0)
             Nele.charval = '\0';
@@ -294,28 +347,28 @@ char* UpdateVal(int type, char *name, int level, char *data)
     }
     case 3:
     {
-        if(Val == "1" && type != 2)
+        if (Val == "1" && type != 2)
             Nele.boolvalue = true;
-        else if(Val == "0" && type != 2)
+        else if (Val == "0" && type != 2)
             Nele.boolvalue = false;
         else
-            return (char*)"ERROR! Type mismatch";  
-        break;      
+            return (char *)"ERROR! Type mismatch";
+        break;
     }
     }
     scopes[Exist][str] = Nele;
-    return (char*)"1";
+    return (char *)"1";
 }
 
-char* GetInfo(char* name, int level, int* type, int* isconstant, int* isset)
+char *GetInfo(char *name, int level, int *type, int *isconstant, int *isset)
 {
     string str = name;
     int Exist = GetExistingVarLevel(str, level);
-    if(Exist == -1)
-        return (char*)"ERROR! Variable not declared";
-    
+    if (Exist == -1)
+        return (char *)"ERROR! Variable not declared";
+
     *type = scopes[Exist][str].type;
-    
+
     if (scopes[Exist][str].isConstant == true)
         *isconstant = 1;
     else
@@ -326,15 +379,15 @@ char* GetInfo(char* name, int level, int* type, int* isconstant, int* isset)
     else
         *isset = 0;
 
-    return (char*)"1";
+    return (char *)"1";
 }
 
-int GetIntVal(char* name, int level)
+int GetIntVal(char *name, int level)
 {
     string str = name;
     int Exist = GetExistingVarLevel(str, level);
 
-    if(Exist == -1 || scopes[Exist][str].type != 0)
+    if (Exist == -1 || scopes[Exist][str].type != 0)
     {
         return -1;
     }
@@ -342,12 +395,12 @@ int GetIntVal(char* name, int level)
     return scopes[Exist][str].intval;
 }
 
-float GetFloatVal(char* name, int level)
+float GetFloatVal(char *name, int level)
 {
     string str = name;
     int Exist = GetExistingVarLevel(str, level);
 
-    if(Exist == -1 || scopes[Exist][str].type != 1)
+    if (Exist == -1 || scopes[Exist][str].type != 1)
     {
         return -1;
     }
@@ -355,12 +408,12 @@ float GetFloatVal(char* name, int level)
     return scopes[Exist][str].floatval;
 }
 
-char GetCharVal(char* name, int level)
+char GetCharVal(char *name, int level)
 {
     string str = name;
     int Exist = GetExistingVarLevel(str, level);
 
-    if(Exist == -1 || scopes[Exist][str].type != 2)
+    if (Exist == -1 || scopes[Exist][str].type != 2)
     {
         return -1;
     }
@@ -368,17 +421,17 @@ char GetCharVal(char* name, int level)
     return scopes[Exist][str].charval;
 }
 
-int GetBoolVal(char* name, int level)
+int GetBoolVal(char *name, int level)
 {
     string str = name;
     int Exist = GetExistingVarLevel(str, level);
 
-    if(Exist == -1 || scopes[Exist][str].type != 3)
+    if (Exist == -1 || scopes[Exist][str].type != 3)
     {
         return -1;
     }
 
-    if(scopes[Exist][str].boolvalue == true)
+    if (scopes[Exist][str].boolvalue == true)
         return 1;
     return 0;
 }
@@ -390,7 +443,7 @@ int GetBoolVal(char* name, int level)
 
     if(Exist == -1 || scopes[Exist][str].IsSet == false)
         return (char*)"Error_Message";
-    
+
     switch (scopes[Exist][str].type)
     {
     case 0:
@@ -399,15 +452,15 @@ int GetBoolVal(char* name, int level)
         return &to_string(scopes[Exist][str].intval)[0];
     }
     case 1:
-        return (char*)&to_string(scopes[Exist][str].floatval)[0]; 
+        return (char*)&to_string(scopes[Exist][str].floatval)[0];
     case 2:
         return &(scopes[Exist][str].charval);
     }
     return (char*)"Error_Message";
 }*/
 
-int getany(int& a)
-{   
+int getany(int &a)
+{
     a = 5;
     return 4;
 }

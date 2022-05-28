@@ -17,6 +17,8 @@ extern int GetIntVal(char* name, int level);
 extern float GetFloatVal(char* name, int level);
 extern char GetCharVal(char* name, int level);
 extern int GetBoolVal(char* name, int level);
+extern char* InserNewFunction(int type, char *name, int level);
+extern char* InserNewArgument(int type, char *name, int level);
 //extern char* GetValue(char* name, int level);
 extern int InsertNewIntElement(int type, int isconstant, char* name, int level, int intVal);
 extern int UpdateIntVal(int type, int isconstant, char* name, int level, int intVal);
