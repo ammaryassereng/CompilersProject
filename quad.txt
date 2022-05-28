@@ -45,3 +45,10 @@ MOV 	5 	a1
 MOV 	0 	x 	
 DIV 	5 	0 	5 	
 MOV 	5 	x 	
+MOV 	5 	x 	
+MOV 	5 	a 	
+MOV 	5 	x 	
+MOV 	5 	a1 	
+MOV 	a 	a 	
+MOV 	5 	x 	
+MOV 	0 	z 	

@@ -1,2 +1,6 @@
+scoope Id: 1
+z Variable type: int, value = 0 Constant: false initiallized: true
 scoope Id: 0
+func Function type: int
+y Argument type: int
 x Variable type: int, value = 5 Constant: false initiallized: true

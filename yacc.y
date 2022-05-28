@@ -804,6 +804,20 @@ assignment: VAR EQUAL math_expr                     {
                                                         printf("assignment: VAR = CHAR_VALUE\n");
                                                     }
            | VAR EQUAL FUNCTION_CALL                {   printf("assignment: VAR = Function call\n");
+                                                        int type, isconst, isset;
+                                                        if(strcmp (GetInfo($1.lexeme,scopeId,&type,&isconst,&isset), (char*)"1") != 0)
+                                                        {   printf("VAR %s :not declared scopeId:%d",$1.lexeme,scopeId);
+                                                            //exit(0);
+                                                        }
+                                                        else
+                                                        {
+                                                            char * res = GetFuncInfo($3.lexeme,scopeId,type);
+                                                            if(strcmp (res, (char *)"1") != 0)
+                                                            {
+                                                                yyerror(res);
+                                                                ////exit(0);
+                                                            }
+                                                        }
                                                     }
           ;
 
@@ -941,14 +955,18 @@ FUNCTION_CALL: VAR '(' CALL_PARAMETERS ')'  {   printf("function_call \n");
 
 CALL_PARAMETERS: CALL_PARAMETERS COMMA DATA | DATA {printf("call parameters\n");} ;
 
-DATA : VAR              {printf("Data Var \n");}      
+DATA : VAR              {printf("Data Var \n"); 
+                        int type, isconst;
+                        DecAndInit($1.lexeme, scopeId, &type, &isconst);}      
      | INT_VALUE        {printf("Data int \n");}
      | DECIMAL_VALUE    {printf("Data floa \nt");}
      | CHAR_VALUE       {printf("Data char \n");}
      | logic_expr       {printf("Data bool \n");}
      ;
 
-RETURN_STATEMENT: RETURN VAR            {printf("return Var \n");}
+RETURN_STATEMENT: RETURN VAR            {printf("return Var \n");
+                                        int type, isconst;
+                                        DecAndInit($2.lexeme, scopeId, &type, &isconst);} 
                 | RETURN INT_VALUE      {printf("return int \n");}
                 | RETURN DECIMAL_VALUE  {printf("return float \n");}
                 | RETURN CHAR_VALUE     {printf("return char \n");}
