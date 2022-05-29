@@ -1,1 +1,2 @@
 ------------- transcript ----------
+line 4 : ERROR! varialbe already declared 
