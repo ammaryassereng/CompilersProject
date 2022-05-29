@@ -2,3 +2,8 @@ int x = 5;
 bool y = true;
 int z = 3;
 int a = x + y;
+bool q=5>3;
+bool w=3<5;
+bool e=3==5;
+bool r=5>=5;
+bool t=3<=3;
