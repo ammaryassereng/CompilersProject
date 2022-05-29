@@ -8,8 +8,8 @@ function App() {
   const submitHandler = async (event) => {
     event.preventDefault();
 
-    const res = await instance.post("/write", { data: code });
-    console.log(res);
+    await instance.post("/write", { data: code });
+    const res = await instance.get("/transcript");
     setTrans(res.data.transcript);
   };
   const inputChangeHandler = (event) => {

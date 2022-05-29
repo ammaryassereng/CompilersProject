@@ -26,12 +26,18 @@ app.post("/write", async (req, res) => {
         console.log(err);
       }
     });
-
-    const transcriptPath = path.join(__dirname, "transcript.txt");
-    const transcript = fs.readFileSync(transcriptPath, "utf8");
-    res.status(200).send({ transcript: transcript });
+    res.send("success");
   } catch (err) {
     console.log(err.toString());
+    res.status(500).send(err.toString());
+  }
+});
+app.get("/transcript", async (req, res) => {
+  try {
+    const filePath = path.join(__dirname, "transcript.txt");
+    const data = fs.readFileSync(filePath, "utf8");
+    res.status(200).send({ transcript: data });
+  } catch (err) {
     res.status(500).send(err.toString());
   }
 });

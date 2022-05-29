@@ -1,5 +1,3 @@
 ------------- transcript ----------
+line 3 : ERROR! varialbe already declared 
 line 5 : ERROR! varialbe already declared 
-line 6 : ERROR! varialbe already declared 
-line 7 : ERROR! varialbe already declared 
-line 9 : ERROR! varialbe already declared 
