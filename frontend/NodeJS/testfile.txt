@@ -1,3 +1,9 @@
-int x = 5;
-int y = 6;
-int z = 7;
+bool x = 5>3;
+bool y = true;
+bool a = true;
+bool z = ((x is true) && (y is true)) ;
+int a;
+int z;
+int y;
+int k = 6;
+bool k;

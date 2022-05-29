@@ -1,0 +1,6 @@
+scoope Id: 0
+k Variable type: int, value = 6 Constant: false initiallized: true
+z Variable type: bool, value = 1 Constant: false initiallized: true
+a Variable type: bool, value = 1 Constant: false initiallized: true
+x Variable type: bool, value = 1 Constant: false initiallized: true
+y Variable type: bool, value = 1 Constant: false initiallized: true

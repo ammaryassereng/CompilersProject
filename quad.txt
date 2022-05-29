@@ -1,57 +1,8 @@
 MOV 	5 	x 	
-ADD 	5 	1 	6 	
-MOV 	6 	x 	
-ADD 	6 	5 	11 	
-MOV 	11 	y 	
+MOV 	6 	y 	
+ADD 	5 	6 	11 	
+MOV 	11 	z 	
 MOV 	5 	x 	
-MOV 	a 	a 	
-MOV 	a 	hi 	
-MOV 	a 	hi 	
-MOV 	a 	hi 	
-MOV 	0 	x 	
-MOV 	0 	x 	
-MOV 	0 	x 	
-MOV 	0 	x 	
-MOV 	0 	x 	
-MOV 	0 	x 	
-MOV 	0 	x 	
-MOV 	0 	x 	
-MOV 	0 	a 	
-MOV 	0 	a 	
-MOV 	0 	a 	
-MOV 	0 	a 	
-MOV 	0 	a 	
-MOV 	0 	a 	
-MOV 	0 	a 	
-MOV 	0 	a 	
-MOV 	5 	x 	
-<<<<<<< Updated upstream
-MOV 	0 	y 	
-MOV 	5 	a 	
-MOV 	0 	c 	
-MOV 	5 	a 	
-MOV 	0 	y 	
-MOV 	5 	a 	
-MOV 	0 	x 	
-MOV 	5 	a 	
-MOV 	0 	y 	
-MOV 	5 	a 	
-MOV 	5 	a 	
-MOV 	5 	a 	
-MOV 	5 	a 	
-MOV 	5 	a1 	
-MOV 	5 	a1 	
-MOV 	5 	a1 	
-MOV 	5 	a1 	
-MOV 	0 	x 	
-DIV 	5 	0 	5 	
-MOV 	5 	x 	
-MOV 	5 	x 	
-MOV 	5 	a 	
-MOV 	5 	x 	
-MOV 	5 	a1 	
-MOV 	a 	a 	
-MOV 	5 	x 	
-MOV 	0 	z 	
-=======
->>>>>>> Stashed changes
+MOV 	6 	y 	
+ADD 	5 	8 	13 	
+MOV 	13 	z 	

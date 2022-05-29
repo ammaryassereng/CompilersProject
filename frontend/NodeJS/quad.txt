@@ -1,0 +1,7 @@
+GT 	5 	3 	true 	
+MOV 	1 	x 	
+MOV 	1 	y 	
+MOV 	1 	a 	
+AND 	true 	true 	true 	
+MOV 	1 	z 	
+MOV 	6 	k 	
