@@ -25,6 +25,7 @@ MOV 	0 	a
 MOV 	0 	a 	
 MOV 	0 	a 	
 MOV 	5 	x 	
+<<<<<<< Updated upstream
 MOV 	0 	y 	
 MOV 	5 	a 	
 MOV 	0 	c 	
@@ -52,3 +53,5 @@ MOV 	5 	a1
 MOV 	a 	a 	
 MOV 	5 	x 	
 MOV 	0 	z 	
+=======
+>>>>>>> Stashed changes

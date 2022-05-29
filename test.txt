@@ -1,0 +1,4 @@
+int x = 5;
+bool y = true;
+int z = 3;
+int a = x + y;
