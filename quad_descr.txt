@@ -1,0 +1,9 @@
+MOV Value Variable (Move the value into the variable)
+ADD Value1 Value2 Variable (Add value1 and value2 into variable) 
+SUB Value1 Value2 Variable (Subtract value1 and value2 into variable)
+MUL Value1 Value2 Variable (Multiply value1 and value2 into variable) 
+DIV Value1 Value2 Variable (DIVIDE value1 and value2 into variable) 
+OR bool_value1 bool_value2 bool_result (Make OR between bool_value1 and bool_value2 and result is bool_result)
+AND bool_value1 bool_value2 bool_result (Make AND between bool_value1 and bool_value2 and result is bool_result)
+NOT bool_value1 bool_value2 bool_result (Make NOT for bool_value1 and result is bool_result)
+GE 
