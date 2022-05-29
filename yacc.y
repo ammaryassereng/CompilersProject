@@ -338,7 +338,7 @@ const_declaration : CONST INT VAR EQUAL math_expr  {
                   | CONST CHAR VAR EQUAL CHAR_VALUE     {
                                                         char  cval[1];
                                                         cval[0] = $5;
-                                                        quad("MOV", $3.lexeme, cval,"");
+                                                        quad("MOV", $3.lexeme, fromCharToChar($5),"");
                                                         char* res = InserNewElement(2,1,$3.lexeme,scopeId,cval);
                                                         if(strcmp (res, (char *)"1") != 0)
                                                         {
@@ -537,7 +537,10 @@ term: term MULTIPLY factor          {
                                                         yyerror("WARNING: Possible Division By zero\n");
                                                     }
                                                     else
+                                                    {
                                                         $$.fval = $1.fval / $3.ival;
+                                                        quad("DIV", fromFloatToChar($$.fval), fromFloatToChar($1.fval), fromIntToChar($3.ival));
+                                                    }
                                                 }
                                                 else
                                                 {
@@ -545,11 +548,14 @@ term: term MULTIPLY factor          {
                                                     {
                                                         yyerror("WARNING: Possible Division By zero\n");
                                                     }
-                                                    else  
+                                                    else
+                                                    {  
                                                         $$.fval = $1.ival / $3.fval;
+                                                        quad("DIV", fromFloatToChar($$.fval), fromIntToChar($1.ival), fromFloatToChar($3.fval));
+                                                    }
                                                 }
                                                 printf("float => term / factor() = %f\n", $$.fval);
-                                                quad("DIV", fromFloatToChar($$.fval), fromFloatToChar($1.fval), fromIntToChar($3.ival));
+                                                //quad("DIV", fromFloatToChar($$.fval), fromFloatToChar($1.fval), fromIntToChar($3.ival));
                                             }
                                         else if($1.typeId == 0)
                                         {
@@ -570,8 +576,10 @@ term: term MULTIPLY factor          {
                                                 yyerror("WARNING: Possible Division By zero\n");
                                             }
                                             else
+                                            {
                                                 $$.fval = $1.fval / $3.fval;
-                                            quad("DIV", fromFloatToChar($$.fval), fromFloatToChar($1.fval), fromFloatToChar($3.fval));
+                                                quad("DIV", fromFloatToChar($$.fval), fromFloatToChar($1.fval), fromFloatToChar($3.fval));
+                                            }
                                         }
                                     } 
     | factor                        { 
