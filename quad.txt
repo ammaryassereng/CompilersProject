@@ -1,8 +1,15 @@
 MOV 	5 	x 	
 MOV 	6 	y 	
-ADD 	5 	6 	11 	
-MOV 	11 	z 	
-MOV 	5 	x 	
-MOV 	6 	y 	
 ADD 	5 	8 	13 	
 MOV 	13 	z 	
+MOV 	5 	x 	
+GT 	5 	3 	true 	
+MOV 	1 	q 	
+LT 	3 	5 	true 	
+MOV 	1 	w 	
+EQ 	3 	5 	false 	
+MOV 	0 	e 	
+GE 	5 	5 	true 	
+MOV 	1 	r 	
+LE 	3 	3 	true 	
+MOV 	1 	t 	
