@@ -1,4 +1,9 @@
 scoope Id: 0
-z Variable type: int, value = 13 Constant: false initiallized: true
+e Variable type: bool, value = 0 Constant: false initiallized: true
+w Variable type: bool, value = 1 Constant: false initiallized: true
 x Variable type: int, value = 5 Constant: false initiallized: true
+t Variable type: bool, value = 1 Constant: false initiallized: true
 y Variable type: int, value = 6 Constant: false initiallized: true
+z Variable type: int, value = 13 Constant: false initiallized: true
+r Variable type: bool, value = 1 Constant: false initiallized: true
+q Variable type: bool, value = 1 Constant: false initiallized: true
