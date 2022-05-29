@@ -669,7 +669,7 @@ logic_expr:'(' logic_expr ')'                       {
                                                         DecAndInit($2.lexeme,scopeId,&type,&isconst);
                                                         if (type == 3 ){//type bool
                                                             $$.bval = !GetBoolVal($2.lexeme,scopeId);
-                                                            quad("NOT", fromBoolToChar($$.bval), fromBoolToChar(GetBoolVal($2.lexeme,scopeId)),"");
+                                                            quad("NOT", fromBoolToChar($$.bval), $2.lexeme,"");
                                                         }else   
                                                             yyerror("Type mismatch logic_expr");
                                                     }
@@ -1036,9 +1036,11 @@ int main (void) {
     
     NewLevel();
     FILE* ftrans = fopen("transcript.txt","w");
+    FILE* fquad = fopen("quad.txt","w");
+    fclose(fquad);
     fprintf(ftrans,"------------- transcript ----------\n");
     fclose(ftrans);
-    /*yyin = fopen("testfile.txt","r+");
+    yyin = fopen("testfile.txt","r+");
     if(yyin ==NULL){
         printf("File Not Found\n");
     }
@@ -1047,8 +1049,8 @@ int main (void) {
         printf(">>>> Parsing the File <<<<\n\n"); 
         yyparse();
     }
-    fclose(yyin);*/
-    yyparse();
+    fclose(yyin);
+    //yyparse();
     removeLevel();
     return 0;
 }
